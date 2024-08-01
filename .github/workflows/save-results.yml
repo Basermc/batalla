@@ -1,0 +1,24 @@
+name: Save Results
+
+on:
+  repository_dispatch:
+    types: [save-results]
+
+jobs:
+  save-results:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Save results
+        env:
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+        run: |
+          mkdir -p resultados
+          echo "${{ github.event.client_payload.content }}" | jq '.' > resultados/${{ github.event.client_payload.filename }}
+          git config --global user.name 'github-actions[bot]'
+          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+          git add resultados/${{ github.event.client_payload.filename }}
+          git commit -m "Añadir resultados de ${{ github.event.client_payload.filename }}"
+          git push
