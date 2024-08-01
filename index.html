@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Puntuación Batallas de Gallos</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        .container {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="numFreestylers">Número de Freestylers: </label>
+        <input type="number" id="numFreestylers" min="1" value="2">
+        <label for="numIntervenciones">Número de Intervenciones: </label>
+        <input type="number" id="numIntervenciones" min="1" value="2">
+        <button onclick="crearTabla()">Crear Tabla</button>
+    </div>
+    <table id="tablaPuntuacion">
+        <!-- La tabla se generará aquí -->
+    </table>
+    <button onclick="finalizar()">Finalizar y Guardar</button>
+    <script>
+        function crearTabla() {
+            const numFreestylers = document.getElementById('numFreestylers').value;
+            const numIntervenciones = document.getElementById('numIntervenciones').value;
+            const tabla = document.getElementById('tablaPuntuacion');
+            
+            tabla.innerHTML = ''; // Limpiar la tabla
+            
+            // Crear la fila de encabezado
+            let headerRow = '<tr><th>Freestyler</th>';
+            for (let i = 1; i <= numIntervenciones; i++) {
+                headerRow += `<th>Intervención ${i}</th>`;
+            }
+            headerRow += '<th>Total</th></tr>';
+            tabla.innerHTML += headerRow;
+            
+            // Crear las filas de freestylers
+            for (let i = 1; i <= numFreestylers; i++) {
+                let row = `<tr><td><input type="text" placeholder="Nombre Freestyler ${i}"></td>`;
+                for (let j = 1; j <= numIntervenciones; j++) {
+                    row += `<td><input type="number" min="1" max="10" value="0" onchange="calcularTotal(this)"></td>`;
+                }
+                row += '<td class="total">0</td></tr>';
+                tabla.innerHTML += row;
+            }
+        }
+
+        function calcularTotal(input) {
+            const row = input.parentNode.parentNode;
+            const inputs = row.querySelectorAll('input[type="number"]');
+            let total = 0;
+            inputs.forEach(input => {
+                total += parseInt(input.value) || 0;
+            });
+            row.querySelector('.total').innerText = total;
+        }
+
+        function finalizar() {
+            const tabla = document.getElementById('tablaPuntuacion');
+            const filas = tabla.querySelectorAll('tr');
+            const resultados = [];
+            
+            filas.forEach((fila, index) => {
+                if (index === 0) return; // Saltar la fila de encabezado
+                const nombre = fila.querySelector('input[type="text"]').value;
+                const puntuaciones = [];
+                fila.querySelectorAll('input[type="number"]').forEach(input => {
+                    puntuaciones.push(parseInt(input.value) || 0);
+                });
+                const total = parseInt(fila.querySelector('.total').innerText);
+                resultados.push({ nombre, puntuaciones, total });
+            });
+
+            const nombreJurado = prompt("Introduce tu nombre de jurado:");
+            const blob = new Blob([JSON.stringify(resultados, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = `${nombreJurado}.json`;
+            a.click();
+        }
+    </script>
+</body>
+</html>
