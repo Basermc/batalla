@@ -100,7 +100,7 @@
                     headers: {
                         'Accept': 'application/vnd.github.everest-preview+json',
                         'Content-Type': 'application/json',
-                        'Authorization': `Bearer YOUR_GH_TOKEN_HERE`
+                        'Authorization': `Bearer ${{ secrets.GH_TOKEN }}`
                     },
                     body: JSON.stringify({
                         event_type: 'save-results',
