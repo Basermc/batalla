@@ -7,7 +7,7 @@ on:
 jobs:
   save-results:
     runs-on: ubuntu-latest
-    environment: gh-pages  # Usa el entorno que has configurado
+    environment: github-pages  # Usa el entorno que has configurado
 
     steps:
       - name: Checkout repository
