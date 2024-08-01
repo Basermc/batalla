@@ -8,14 +8,13 @@ jobs:
   save-results:
     runs-on: ubuntu-latest
     environment: github-pages  # Usa el entorno que has configurado
-
     steps:
       - name: Checkout repository
         uses: actions/checkout@v2
 
       - name: Save results
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}  # Usa el secreto configurado en el entorno
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
           mkdir -p resultados
           echo "${{ github.event.client_payload.content }}" > resultados/${{ github.event.client_payload.filename }}
