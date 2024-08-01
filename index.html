@@ -95,12 +95,12 @@
             const jsonContent = JSON.stringify(resultados, null, 2);
 
             try {
-                const response = await fetch('https://api.github.com/repos/Basermc/batalla/dispatches', {
+                const response = await fetch('https://api.github.com/repos/TU_USUARIO/TU_REPOSITORIO/dispatches', {
                     method: 'POST',
                     headers: {
                         'Accept': 'application/vnd.github.everest-preview+json',
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${{ secrets.GH_TOKEN }}`
+                        'Authorization': `Bearer YOUR_GITHUB_TOKEN`, // Aquí puedes poner un token de prueba para pruebas locales
+                        'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
                         event_type: 'save-results',
