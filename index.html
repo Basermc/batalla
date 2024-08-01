@@ -94,27 +94,33 @@
             const nombreJurado = prompt("Introduce tu nombre de jurado:");
             const jsonContent = JSON.stringify(resultados, null, 2);
 
-            // Reemplaza 'TUS_USUARIO' y 'TU_REPOSITORIO' con los valores reales
-            const response = await fetch('https://api.github.com/repos/Basermc/batalla/dispatches', {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/vnd.github.everest-preview+json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    event_type: 'save-results',
-                    client_payload: {
-                        filename: `${nombreJurado}.json`,
-                        content: jsonContent
-                    }
-                })
-            });
+            try {
+                const response = await fetch('https://api.github.com/repos/Basermc/batalla/dispatches', {
+                    method: 'POST',
+                    headers: {
+                        'Accept': 'application/vnd.github.everest-preview+json',
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer YOUR_GH_TOKEN_HERE`
+                    },
+                    body: JSON.stringify({
+                        event_type: 'save-results',
+                        client_payload: {
+                            filename: `${nombreJurado}.json`,
+                            content: jsonContent
+                        }
+                    })
+                });
 
-            if (response.ok) {
-                alert('Resultados enviados para guardar en el repositorio.');
-            } else {
-                alert('Hubo un problema al enviar los resultados.');
-                console.error(await response.text());
+                if (response.ok) {
+                    alert('Resultados enviados para guardar en el repositorio.');
+                } else {
+                    const errorData = await response.json();
+                    alert('Hubo un problema al enviar los resultados.');
+                    console.error('Error:', errorData);
+                }
+            } catch (error) {
+                alert('Hubo un problema con la solicitud.');
+                console.error('Error:', error);
             }
         }
     </script>
