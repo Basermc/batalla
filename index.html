@@ -78,30 +78,31 @@
         async function finalizar() {
             const tabla = document.getElementById('tablaPuntuacion');
             const filas = tabla.querySelectorAll('tr');
-            let resultados = '';
+            const resultados = [];
             
             filas.forEach((fila, index) => {
                 if (index === 0) return; // Saltar la fila de encabezado
                 const nombre = fila.querySelector('input[type="text"]').value;
-                resultados += `Freestyler: ${nombre}\n`;
-                fila.querySelectorAll('input[type="number"]').forEach((input, idx) => {
-                    resultados += `  Intervención ${idx + 1}: ${input.value}\n`;
+                const puntuaciones = [];
+                fila.querySelectorAll('input[type="number"]').forEach(input => {
+                    puntuaciones.push(parseInt(input.value) || 0);
                 });
-                const total = fila.querySelector('.total').innerText;
-                resultados += `  Total: ${total}\n\n`;
+                const total = parseInt(fila.querySelector('.total').innerText);
+                resultados.push({ nombre, puntuaciones, total });
             });
 
             const nombreJurado = prompt("Introduce tu nombre de jurado:");
-            const data = new URLSearchParams();
-            data.append('filename', `${nombreJurado}.txt`);
-            data.append('content', resultados);
+            const txtContent = resultados.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
             const response = await fetch('https://incredible-torrone-545d43.netlify.app/.netlify/functions/trigger-workflow', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-                body: data.toString()
+                body: new URLSearchParams({
+                    filename: `${nombreJurado}.txt`,
+                    content: txtContent
+                })
             });
 
             if (response.ok) {
@@ -114,4 +115,3 @@
     </script>
 </body>
 </html>
-
