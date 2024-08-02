@@ -38,6 +38,6 @@ jobs:
           git config --global user.email 'github-actions@github.com'
           git add resultados/${{ env.DATE }}/${{ env.DATE }}.txt
           git commit -m "Add best freestylers file"
-          git push origin main
+          git push origin resultados
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
