@@ -195,9 +195,13 @@
                     })
                 });
 
+                const responseText = await response.text(); // Leer el cuerpo de la respuesta
+
                 if (response.ok) {
+                    console.log('Respuesta del servidor: ', responseText); // Mostrar la respuesta en consola
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
+                    console.error('Error en la respuesta: ', responseText); // Mostrar la respuesta en consola
                     alert('Hubo un problema al enviar los resultados.');
                 }
             } catch (error) {
