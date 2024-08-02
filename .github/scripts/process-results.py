@@ -7,7 +7,7 @@ from datetime import datetime
 # Obtener la fecha actual en formato YYYY-MM-DD
 fecha_actual = datetime.now().strftime('%Y-%m-%d')
 directorio_puntuaciones = f'puntuaciones/{fecha_actual}'
-directorio_resultados = 'resultados/fechadeldia'
+directorio_resultados = f'resultados/{fecha_actual}'
 
 # Crear directorios si no existen
 os.makedirs(directorio_resultados, exist_ok=True)
@@ -43,16 +43,15 @@ df_puntuaciones = df.explode('puntuaciones').reset_index(drop=True)
 # Agrupar por nombre y sumar las puntuaciones
 df_grouped = df_puntuaciones.groupby('name').sum().reset_index()
 
-# Ordenar por total de mayor a menor y seleccionar los 32 mejores
+# Ordenar por total y seleccionar los 32 mejores freestylers
 df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
 
-# Imprimir el DataFrame para verificar
-print(df_top_32)
+# Guardar los resultados agrupados y los mejores freestylers
+output_file_grouped = f'{directorio_resultados}/resultados_agrupados.csv'
+output_file_top_32 = f'{directorio_resultados}/best_freestylers.txt'
 
-# Guardar los mejores freestylers en un archivo de texto
-output_file = f'{directorio_resultados}/best_freestylers.txt'
-with open(output_file, 'w') as f:
-    for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']}, Total: {row['total']}\n")
+df_grouped.to_csv(output_file_grouped, index=False)
+df_top_32.to_csv(output_file_top_32, sep='\t', index=False, header=False)
 
-print(f'Archivo best_freestylers.txt creado en {directorio_resultados}')
+print(f'Resultados guardados en {output_file_grouped}')
+print(f'Mejores 32 freestylers guardados en {output_file_top_32}')
