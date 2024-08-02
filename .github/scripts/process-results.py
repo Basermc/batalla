@@ -50,8 +50,13 @@ df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
 output_file_grouped = f'{directorio_resultados}/resultados_agrupados.csv'
 output_file_top_32 = f'{directorio_resultados}/best_freestylers.txt'
 
+# Guardar el DataFrame agrupado como CSV
 df_grouped.to_csv(output_file_grouped, index=False)
-df_top_32.to_csv(output_file_top_32, sep='\t', index=False, header=False)
+
+# Guardar los mejores 32 freestylers como TXT
+with open(output_file_top_32, 'w') as f:
+    for index, row in df_top_32.iterrows():
+        f.write(f"{row['name']}\t{row['total']}\n")
 
 print(f'Resultados guardados en {output_file_grouped}')
 print(f'Mejores 32 freestylers guardados en {output_file_top_32}')
