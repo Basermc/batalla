@@ -1,0 +1,2 @@
+Nombre: asda, Puntuaciones: 1, 0, Total: 1
+Nombre: asdsa, Puntuaciones: 1, 0, Total: 1
