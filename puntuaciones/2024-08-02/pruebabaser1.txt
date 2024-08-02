@@ -1,0 +1,4 @@
+Nombre: dager, Puntuaciones: 3, 2.5, 1.5, 3, Total: 10
+Nombre: shoot, Puntuaciones: 2, 0, 1.5, 0, Total: 3.5
+Nombre: bosko, Puntuaciones: 1.5, 0, 1.5, 3, Total: 6
+Nombre: tanquecrack, Puntuaciones: 1, 0, 3.5, 3, Total: 7.5
