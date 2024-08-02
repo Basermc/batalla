@@ -122,9 +122,12 @@
             for (let i = 1; i <= numFreestylers; i++) {
                 let row = `<tr><td><input type="text" placeholder="Nombre Freestyler ${i}"></td>`;
                 for (let j = 1; j <= numIntervenciones; j++) {
-                    row += `<td><input type="range" min="0" max="10" step="0.5" value="0" onchange="calcularTotal(this)"></td>`;
+                    row += `<td>
+                                <input type="range" min="0" max="5" step="0.1" value="0" onchange="calcularTotal(this)">
+                                <span class="value">0.0</span>
+                            </td>`;
                 }
-                row += '<td class="total">0</td></tr>';
+                row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
             }
         }
@@ -137,6 +140,10 @@
                 total += parseFloat(input.value) || 0;
             });
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
+
+            // Actualizar el valor mostrado junto al slider
+            const valueSpan = input.nextElementSibling;
+            valueSpan.innerText = parseFloat(input.value).toFixed(1);
         }
 
         async function finalizar() {
