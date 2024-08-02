@@ -56,7 +56,7 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/{fecha_actual}.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        puntuaciones_str = ', '.join(map(str, [row['puntuaciones']]))
+        puntuaciones_str = ', '.join(map(str, row['puntuaciones']))
         f.write(f"Nombre: {row['name']}, Puntuaciones: {puntuaciones_str}\n")
 
 print(f'Archivo {fecha_actual}.txt creado en {directorio_resultados}')
