@@ -43,9 +43,16 @@ df_puntuaciones = df.explode('puntuaciones').reset_index(drop=True)
 # Agrupar por nombre y sumar las puntuaciones
 df_grouped = df_puntuaciones.groupby('name').sum().reset_index()
 
-# Imprimir el DataFrame para verificar
-print(df_grouped)
+# Ordenar por total de mayor a menor y seleccionar los 32 mejores
+df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
 
-# Guardar resultados
-output_file = f'{directorio_resultados}/resultados_agrupados.csv'
-df_grouped.to_csv(output_file, index=False)
+# Imprimir el DataFrame para verificar
+print(df_top_32)
+
+# Guardar los mejores freestylers en un archivo de texto
+output_file = f'{directorio_resultados}/best_freestylers.txt'
+with open(output_file, 'w') as f:
+    for index, row in df_top_32.iterrows():
+        f.write(f"Nombre: {row['name']}, Total: {row['total']}\n")
+
+print(f'Archivo best_freestylers.txt creado en {directorio_resultados}')
