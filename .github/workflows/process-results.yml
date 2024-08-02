@@ -20,7 +20,7 @@ jobs:
           pip install pandas
 
       - name: Process results
-        run: python .github/scripts/process_results.py
+        run: python .github/scripts/process-results.py
 
       - name: Commit and push best freestylers
         run: |
