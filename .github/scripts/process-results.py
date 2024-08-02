@@ -53,6 +53,6 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/best_freestylers.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']},\n")
+        f.write(f"Nombre: {row['name']}, Total: {row['total']}\n")
 
 print(f'Archivo best_freestylers.txt creado en {directorio_resultados}')
