@@ -1,41 +1,32 @@
-name: Process Results
+name: Verificar Resultados
 
 on: push
+
 jobs:
-  process-results:
+  check_files:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout the code
-      uses: actions/checkout@v3
+      - name: Check out the repository
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.8'
+      - name: List files in the directory
+        run: |
+          ls -la resultados || echo "No se encontró el directorio resultados"
+          ls -la resultados/${{ github.event.inputs.date }}.txt || echo "No se encontró el archivo con la fecha actual"
+          ls -la resultados/resultados_agrupados.csv || echo "No se encontró el archivo resultados_agrupados.csv"
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pandas
-
-    - name: Run the results processing script
-      run: python .github/scripts/process-results.py
-
-    - name: List files in the directory
-      run: |
-          echo "Verificando archivos en la fecha: ${{ github.event.inputs.date }}"
-          ls -la resultados/${{ github.event.inputs.date }} || echo "No se encontró el directorio"
-          ls -la resultados/${{ github.event.inputs.date }}/best_freestylers.txt || echo "No se encontró el archivo best_freestylers.txt"
-          ls -la resultados/${{ github.event.inputs.date }}/resultados_agrupados.csv || echo "No se encontró el archivo resultados_agrupados.csv"
-
-    - name: Commit and push results
-      env:
-        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-      run: |
-        git config --global user.email "you@example.com"
-        git config --global user.name "Your Name"
-        git add resultados/${{ github.event.inputs.date }}/best_freestylers.txt
-        git add resultados/${{ github.event.inputs.date }}/resultados_agrupados.csv
-        git commit -m "Add best freestylers and results for ${{ github.event.inputs.date }}"
-        git push origin resultados
+      - name: Run script
+        run: |
+          python .github/scripts/process_results.py
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Commit and push results
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add resultados/${{ github.event.inputs.date }}.txt
+          git commit -m "Add best freestylers results"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
