@@ -24,20 +24,22 @@ exports.handler = async function(event, context) {
     const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}`;
     const path = `puntuaciones/${formattedDate}/${filename}`;
 
+    // Configuración para la API de GitHub
     const options = {
         hostname: 'api.github.com',
         path: `/repos/Basermc/batalla/contents/${path}`,
         method: 'PUT',
         headers: {
-            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+            'Authorization': `Bearer ${process.env.GH_TOKEN}`,
             'User-Agent': 'Netlify Function',
             'Content-Type': 'application/json'
         }
     };
 
     const data = JSON.stringify({
-        message: `Adding ${path}`,
-        content: Buffer.from(content).toString('base64')
+        message: `Adding ${path} to resultados branch`,
+        content: Buffer.from(content).toString('base64'),
+        branch: 'resultados'  // Especificar la rama en la que hacer el commit
     });
 
     return new Promise((resolve, reject) => {
