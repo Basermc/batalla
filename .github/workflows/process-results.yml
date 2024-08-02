@@ -1,9 +1,7 @@
 name: Process Results
 
 on:
-  push:
-    branches:
-      - resultados
+  workflow_dispatch:
 
 jobs:
   process-results:
@@ -11,8 +9,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-        with:
-          ref: resultados
 
       - name: Set up Python
         uses: actions/setup-python@v3
@@ -31,5 +27,5 @@ jobs:
           git config --global user.name "github-actions"
           git config --global user.email "actions@github.com"
           git add best_freestylers.txt
-          git commit -m "Add top 16 freestylers"
+          git commit -m "Add top 32 freestylers"
           git push origin resultados
