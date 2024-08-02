@@ -1,3 +1,4 @@
+Nombre: Baser, Puntuaciones: 8.0
 Nombre: Kmiba, Puntuaciones: 8.0
 Nombre: Juan, Puntuaciones: 7.3
 Nombre: Dager, Puntuaciones: 6.4
