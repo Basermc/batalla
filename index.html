@@ -22,7 +22,7 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
         }
-        label, input, button {
+        label, button {
             margin-bottom: 10px;
             display: block;
         }
@@ -30,15 +30,29 @@
             font-size: 18px;
             color: #ecf0f1;
         }
-        input[type="number"], input[type="text"] {
-            padding: 8px;
-            font-size: 16px;
-            border: none;
+        input[type="range"] {
+            width: 100%;
+            margin: 5px 0;
+            -webkit-appearance: none;
+            background: #ecf0f1;
+            height: 8px;
             border-radius: 4px;
-            margin-top: 5px;
+            outline: none;
         }
-        input[type="number"] {
-            width: 60px;
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            background: #e74c3c; /* Rojo vivo */
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        input[type="range"]::-moz-range-thumb {
+            background: #e74c3c; /* Rojo vivo */
+            height: 24px;
+            width: 24px;
+            border-radius: 50%;
+            cursor: pointer;
         }
         button {
             background-color: #e74c3c; /* Rojo vivo */
@@ -68,10 +82,6 @@
             background-color: #2ecc71; /* Verde brillante */
             color: #ffffff; /* Texto blanco */
             font-weight: bold;
-        }
-        td input[type="number"] {
-            background-color: #ecf0f1; /* Fondo claro para inputs */
-            color: #2c3e50; /* Texto oscuro */
         }
         .total {
             font-weight: bold;
@@ -112,7 +122,7 @@
             for (let i = 1; i <= numFreestylers; i++) {
                 let row = `<tr><td><input type="text" placeholder="Nombre Freestyler ${i}"></td>`;
                 for (let j = 1; j <= numIntervenciones; j++) {
-                    row += `<td><input type="number" min="1" max="10" value="0" onchange="calcularTotal(this)"></td>`;
+                    row += `<td><input type="range" min="0" max="10" step="0.5" value="0" onchange="calcularTotal(this)"></td>`;
                 }
                 row += '<td class="total">0</td></tr>';
                 tabla.innerHTML += row;
@@ -121,12 +131,12 @@
 
         function calcularTotal(input) {
             const row = input.parentNode.parentNode;
-            const inputs = row.querySelectorAll('input[type="number"]');
+            const inputs = row.querySelectorAll('input[type="range"]');
             let total = 0;
             inputs.forEach(input => {
-                total += parseInt(input.value) || 0;
+                total += parseFloat(input.value) || 0;
             });
-            row.querySelector('.total').innerText = total;
+            row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
         }
 
         async function finalizar() {
@@ -138,10 +148,10 @@
                 if (index === 0) return; // Saltar la fila de encabezado
                 const nombre = fila.querySelector('input[type="text"]').value;
                 const puntuaciones = [];
-                fila.querySelectorAll('input[type="number"]').forEach(input => {
-                    puntuaciones.push(parseInt(input.value) || 0);
+                fila.querySelectorAll('input[type="range"]').forEach(input => {
+                    puntuaciones.push(parseFloat(input.value) || 0);
                 });
-                const total = parseInt(fila.querySelector('.total').innerText);
+                const total = parseFloat(fila.querySelector('.total').innerText);
                 resultados.push({ nombre, puntuaciones, total });
             });
 
