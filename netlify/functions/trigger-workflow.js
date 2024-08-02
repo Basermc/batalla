@@ -30,7 +30,7 @@ exports.handler = async function(event, context) {
         path: `/repos/Basermc/batalla/contents/${path}`,
         method: 'PUT',
         headers: {
-            'Authorization': `Bearer ${process.env.GH_TOKEN}`,
+            'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
             'User-Agent': 'Netlify Function',
             'Content-Type': 'application/json'
         }
