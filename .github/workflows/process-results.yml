@@ -1,32 +1,35 @@
-name: Verificar Resultados
+name: Process Results
 
-on: push
+on:
+  workflow_dispatch:
 
 jobs:
-  check_files:
+  process-results:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Check out the repository
+      - name: Checkout code
         uses: actions/checkout@v3
 
-      - name: List files in the directory
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
         run: |
-          ls -la resultados || echo "No se encontró el directorio resultados"
-          ls -la resultados/${{ github.event.inputs.date }}.txt || echo "No se encontró el archivo con la fecha actual"
-          ls -la resultados/resultados_agrupados.csv || echo "No se encontró el archivo resultados_agrupados.csv"
+          pip install pandas
 
       - name: Run script
         run: |
           python .github/scripts/process-results.py
-        env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
-          
+
       - name: Commit and push results
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
-          git add resultados/${{ github.event.inputs.date }}.txt
-          git commit -m "Add best freestylers results"
-          git push
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add resultados/${{ github.event.inputs.date }}/best_freestylers.txt
+          git commit -m "Add best freestylers file"
+          git push origin resultados
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
