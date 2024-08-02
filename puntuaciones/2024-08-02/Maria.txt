@@ -1,0 +1,2 @@
+Nombre: Baser, Puntuaciones: 3.7, 4.3, Total: 8
+Nombre: Maria , Puntuaciones: 2.2, 2.2, Total: 4.4
