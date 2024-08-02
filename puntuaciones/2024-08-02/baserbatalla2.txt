@@ -1,0 +1,4 @@
+Nombre: kori, Puntuaciones: 4, 3.5, 3, 0, Total: 10.5
+Nombre: shoot, Puntuaciones: 0, 2, 1.5, 0, Total: 3.5
+Nombre: coletiyas, Puntuaciones: 0, 0, 2, 1, Total: 3
+Nombre: tanquecrack, Puntuaciones: 1, 0.5, 2.5, 1, Total: 5
