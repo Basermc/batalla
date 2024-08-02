@@ -1,0 +1,2 @@
+Nombre: Juan, Puntuaciones: 5, 2.3, Total: 7.3
+Nombre: Pepe, Puntuaciones: 3.1, 2.5, Total: 5.6
