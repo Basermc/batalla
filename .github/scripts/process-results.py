@@ -1,9 +1,19 @@
 import pandas as pd
 import glob
 import re
+import os
+from datetime import datetime
+
+# Obtener la fecha actual en formato YYYY-MM-DD
+fecha_actual = datetime.now().strftime('%Y-%m-%d')
+directorio_puntuaciones = f'puntuaciones/{fecha_actual}'
+directorio_resultados = 'resultados/fechadeldia'
+
+# Crear directorios si no existen
+os.makedirs(directorio_resultados, exist_ok=True)
 
 # Ruta a los archivos txt
-files = glob.glob('puntuaciones/2024-08-02/*.txt')
+files = glob.glob(f'{directorio_puntuaciones}/*.txt')
 
 # Función para extraer datos de una línea de texto
 def parse_line(line):
@@ -37,5 +47,5 @@ df_grouped = df_puntuaciones.groupby('name').sum().reset_index()
 print(df_grouped)
 
 # Guardar resultados
-output_file = 'resultados/fechadeldia/resultados_agrupados.csv'
+output_file = f'{directorio_resultados}/resultados_agrupados.csv'
 df_grouped.to_csv(output_file, index=False)
