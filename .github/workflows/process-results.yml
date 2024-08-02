@@ -5,26 +5,30 @@ on: push
 jobs:
   process-results:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v3
+        uses: actions/setup-python@v4
         with:
-          python-version: '3.x'
+          python-version: '3.9'
 
       - name: Install dependencies
         run: |
           pip install pandas
 
-      - name: Process results
-        run: python .github/scripts/process-results.py
-
-      - name: Commit and push best freestylers
+      - name: Run script
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "actions@github.com"
-          git add best_freestylers.txt
-          git commit -m "Add top 32 freestylers"
+          python .github/scripts/process-results.py
+
+      - name: Commit and push results
+        run: |
+          git config --global user.name 'github-actions'
+          git config --global user.email 'github-actions@github.com'
+          git add resultados/fechadeldia/best_freestylers.txt
+          git commit -m "Add best freestylers file"
           git push origin resultados
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
