@@ -1,6 +1,8 @@
 name: Process Results
 
-on: push
+on:
+  workflow_dispatch:
+
 jobs:
   process-results:
     runs-on: ubuntu-latest
@@ -8,8 +10,8 @@ jobs:
     steps:
       - name: Get current date
         id: date
-        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
-        
+        run: echo "DATE=$(date +'%Y-%m-%d')" >> $GITHUB_ENV
+
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -26,12 +28,16 @@ jobs:
         run: |
           python .github/scripts/process-results.py
 
+      - name: List files in the directory
+        run: |
+          ls -la resultados/${{ env.DATE }}
+
       - name: Commit and push results
         run: |
           git config --global user.name 'github-actions'
           git config --global user.email 'github-actions@github.com'
-          git add resultados/${{ steps.date.outputs.date }}/best_freestylers.txt
+          git add resultados/${{ env.DATE }}/best_freestylers.txt
           git commit -m "Add best freestylers file"
-          git push origin resultados
+          git push origin main
         env:
           GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
