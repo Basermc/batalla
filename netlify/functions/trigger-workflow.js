@@ -1,53 +1,53 @@
 const fetch = require('node-fetch');
+const querystring = require('querystring');
 
-exports.handler = async function(event, context) {
-    let data;
+exports.handler = async (event) => {
+    if (event.httpMethod === 'POST') {
+        const body = querystring.parse(event.body);
 
-    try {
-        // Intentar analizar el cuerpo de la solicitud
-        data = JSON.parse(event.body);
+        const filename = body.filename;
+        const content = body.content;
 
-        // Verificar que los campos necesarios estén presentes
-        if (!data.filename || !data.content) {
+        const repo = 'Basermc/batalla'; // Reemplaza con tu nombre de repositorio
+        const workflow = 'save-results.yml'; // Reemplaza con tu archivo de workflow
+        
+        try {
+            // Enviar una solicitud para ejecutar el workflow
+            const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`, {
+                method: 'POST',
+                headers: {
+                    'Accept': 'application/vnd.github.v3+json',
+                    'Authorization': `Bearer ${process.env.GH_TOKEN}`, // Usa tu token de GitHub aquí
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ref: 'main', // Cambia si es necesario
+                    inputs: { filename, content }
+                })
+            });
+
+            if (response.ok) {
+                return {
+                    statusCode: 200,
+                    body: 'Workflow triggered successfully.'
+                };
+            } else {
+                const errorText = await response.text();
+                return {
+                    statusCode: response.status,
+                    body: `Failed to trigger workflow: ${errorText}`
+                };
+            }
+        } catch (error) {
             return {
-                statusCode: 400,
-                body: JSON.stringify({ message: 'Missing required fields: filename or content' })
+                statusCode: 500,
+                body: `Error: ${error.message}`
             };
         }
-
-        // Enviar solicitud a GitHub para activar el workflow
-        const response = await fetch('https://api.github.com/repos/Basermc/batalla/dispatches', {
-            method: 'POST',
-            headers: {
-                'Accept': 'application/vnd.github.everest-preview+json',
-                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                event_type: 'save-results',
-                client_payload: {
-                    filename: data.filename,
-                    content: data.content
-                }
-            })
-        });
-
-        if (response.ok) {
-            return {
-                statusCode: 200,
-                body: JSON.stringify({ message: 'Workflow triggered successfully' })
-            };
-        } else {
-            const errorText = await response.text();
-            return {
-                statusCode: response.status,
-                body: JSON.stringify({ message: 'Error triggering workflow', error: errorText })
-            };
-        }
-    } catch (error) {
+    } else {
         return {
-            statusCode: 500,
-            body: JSON.stringify({ message: 'Server error', error: error.message })
+            statusCode: 405,
+            body: 'Method Not Allowed'
         };
     }
 };
