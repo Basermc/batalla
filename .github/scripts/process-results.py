@@ -42,12 +42,11 @@ df_puntuaciones = df.explode('puntuaciones').reset_index(drop=True)
 
 # Agrupar por nombre y sumar las puntuaciones
 df_grouped = df_puntuaciones.groupby('name').agg({
-    'puntuaciones': 'sum',
-    'total': 'sum'
+    'puntuaciones': 'sum'
 }).reset_index()
 
 # Ordenar por total de mayor a menor y seleccionar los 32 mejores
-df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
+df_top_32 = df_grouped.sort_values(by='puntuaciones', ascending=False).head(32)
 
 # Imprimir el DataFrame para verificar
 print(df_top_32)
@@ -56,7 +55,6 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/{fecha_actual}.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        puntuaciones_str = ', '.join(map(str, row['puntuaciones']))
-        f.write(f"Nombre: {row['name']}, Puntuaciones: {puntuaciones_str}\n")
+        f.write(f"Nombre: {row['name']}, Puntuaciones: {row['puntuaciones']}\n")
 
 print(f'Archivo {fecha_actual}.txt creado en {directorio_resultados}')
