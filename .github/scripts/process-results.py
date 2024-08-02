@@ -4,7 +4,7 @@ import re
 import os
 from datetime import datetime
 
-# Obtener la fecha actual en formato YYYY-MM-DD
+# Obtener la fechaa actual en formato YYYY-MM-DD
 fecha_actual = datetime.now().strftime('%Y-%m-%d')
 directorio_puntuaciones = f'puntuaciones/{fecha_actual}'
 directorio_resultados = f'resultados/{fecha_actual}'
