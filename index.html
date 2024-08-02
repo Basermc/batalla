@@ -195,10 +195,13 @@
                     })
                 });
 
-                if (response.status === 200) {
+                // Verificar el código de estado HTTP
+                if (response.ok) {
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
-                    console.error('Error en la respuesta: ', response.status, response.statusText); // Mostrar el código de estado y el texto de estado
+                    // Mostrar código de estado y texto de estado en caso de error
+                    const errorText = await response.text();
+                    console.error('Error en la respuesta: ', response.status, response.statusText, errorText);
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
