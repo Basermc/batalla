@@ -31,4 +31,4 @@ jobs:
           git commit -m "Add best freestylers file"
           git push origin resultados
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
