@@ -47,8 +47,8 @@ df_grouped = df_puntuaciones.groupby('name').sum().reset_index()
 df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
 
 # Guardar los resultados agrupados y los mejores freestylers
-output_file_grouped = f'{directorio_resultados}/resultados_agrupados.csv'
-output_file_top_32 = f'{directorio_resultados}/best_freestylers.txt'
+output_file_grouped = os.path.join(directorio_resultados, 'resultados_agrupados.csv')
+output_file_top_32 = os.path.join(directorio_resultados, 'best_freestylers.txt')
 
 # Guardar el DataFrame agrupado como CSV
 df_grouped.to_csv(output_file_grouped, index=False)
