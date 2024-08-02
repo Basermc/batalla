@@ -1,8 +1,25 @@
 const https = require('https');
 
 exports.handler = async function(event, context) {
+    if (event.httpMethod !== 'POST') {
+        return {
+            statusCode: 405,
+            body: JSON.stringify({ error: 'Method Not Allowed' })
+        };
+    }
+
     try {
-        const { filename, content } = JSON.parse(event.body);
+        // Extraer datos del cuerpo codificado como URL
+        const body = new URLSearchParams(event.body);
+        const filename = body.get('filename');
+        const content = body.get('content');
+
+        if (!filename || !content) {
+            return {
+                statusCode: 400,
+                body: JSON.stringify({ error: 'Bad Request: Missing filename or content' })
+            };
+        }
 
         const options = {
             hostname: 'api.github.com',
