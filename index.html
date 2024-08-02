@@ -201,6 +201,9 @@
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
+            } catch (error) {
+                // Eliminado el catch para ignorar otros errores
+                console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
     </script>
