@@ -1,0 +1,2 @@
+Nombre: juan, Puntuaciones: 11, 11, Total: 22
+Nombre: pepe, Puntuaciones: 22, 32, Total: 54
