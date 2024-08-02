@@ -1,0 +1,4 @@
+Nombre: krisan, Puntuaciones: 0, 0, 1, 0, Total: 1
+Nombre: dager, Puntuaciones: 1, 0, 1, 0, Total: 2
+Nombre: kaoss, Puntuaciones: 0, 0, 0, 0, Total: 0
+Nombre: kmiba, Puntuaciones: 1, 1, 1, 1, Total: 4
