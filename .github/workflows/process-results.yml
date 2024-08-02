@@ -19,7 +19,7 @@ jobs:
         run: |
           python .github/scripts/process-results.py
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
           
       - name: Commit and push results
         run: |
