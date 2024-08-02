@@ -7,7 +7,7 @@ from datetime import datetime
 # Obtener la fecha actual en formato YYYY-MM-DD
 fecha_actual = datetime.now().strftime('%Y-%m-%d')
 directorio_puntuaciones = f'puntuaciones/{fecha_actual}'
-directorio_resultados = 'resultados/{fecha_actual}'
+directorio_resultados = f'resultados/{fecha_actual}'
 
 # Crear directorios si no existen
 os.makedirs(directorio_resultados, exist_ok=True)
