@@ -1,0 +1,35 @@
+name: Process Results
+
+on:
+  push:
+    branches:
+      - resultados
+
+jobs:
+  process-results:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: resultados
+
+      - name: Set up Python
+        uses: actions/setup-python@v3
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install pandas
+
+      - name: Process results
+        run: python .github/scripts/process_results.py
+
+      - name: Commit and push best freestylers
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add best_freestylers.txt
+          git commit -m "Add top 16 freestylers"
+          git push origin resultados
