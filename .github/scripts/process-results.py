@@ -17,11 +17,11 @@ files = glob.glob(f'{directorio_puntuaciones}/*.txt')
 
 # Función para extraer datos de una línea de texto
 def parse_line(line):
-    match = re.match(r"Nombre: (\w+), Puntuaciones: ([\d, ]+), Total: (\d+)", line)
+    match = re.match(r"Nombre: (\w+), Puntuaciones: ([\d, ]+)", line)
     if match:
         nombre, puntuaciones, total = match.groups()
         puntuaciones = list(map(int, puntuaciones.split(',')))
-        return {'name': nombre, 'puntuaciones': puntuaciones, 'total': int(total)}
+        return {'name': nombre, 'puntuaciones': puntuaciones}
     else:
         return None
 
@@ -53,6 +53,6 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/best_freestylers.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']}, Total: {row['total']}\n")
+        f.write(f"Nombre: {row['name']}")
 
 print(f'Archivo best_freestylers.txt creado en {directorio_resultados}')
