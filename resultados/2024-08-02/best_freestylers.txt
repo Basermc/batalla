@@ -1,4 +1,4 @@
-Nombre: kmiba, Total: 16
-Nombre: dager, Total: 12
-Nombre: krisan, Total: 8
+Nombre: kmiba, Total: 32
+Nombre: dager, Total: 20
+Nombre: krisan, Total: 12
 Nombre: kaoss, Total: 4
