@@ -175,6 +175,10 @@
             });
 
             const nombreJurado = prompt("Introduce tu nombre de jurado:");
+            if (!nombreJurado) {
+                alert('El nombre de jurado es obligatorio.');
+                return;
+            }
             const txtContent = resultados.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
