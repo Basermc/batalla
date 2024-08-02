@@ -197,6 +197,8 @@
 
                 // Verificar solo el código de estado
                 if (response.status === 200) {
+                    const responseText = await response.text(); // Leer la respuesta del servidor
+                    console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
