@@ -24,9 +24,10 @@ jobs:
 
     - name: List files in the directory
       run: |
-        ls -la resultados/${{ github.event.inputs.date }}
-        ls -la resultados/${{ github.event.inputs.date }}/best_freestylers.txt
-        ls -la resultados/${{ github.event.inputs.date }}/resultados_agrupados.csv
+          echo "Verificando archivos en la fecha: ${{ github.event.inputs.date }}"
+          ls -la resultados/${{ github.event.inputs.date }} || echo "No se encontró el directorio"
+          ls -la resultados/${{ github.event.inputs.date }}/best_freestylers.txt || echo "No se encontró el archivo best_freestylers.txt"
+          ls -la resultados/${{ github.event.inputs.date }}/resultados_agrupados.csv || echo "No se encontró el archivo resultados_agrupados.csv"
 
     - name: Commit and push results
       env:
