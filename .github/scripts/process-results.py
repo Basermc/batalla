@@ -55,3 +55,4 @@ df_top_32.to_csv(output_file_top_32, sep='\t', index=False, header=False)
 
 print(f'Resultados guardados en {output_file_grouped}')
 print(f'Mejores 32 freestylers guardados en {output_file_top_32}')
+print('Archivos creados en el directorio:', directorio_resultados)
