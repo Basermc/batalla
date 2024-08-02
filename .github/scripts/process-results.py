@@ -17,11 +17,11 @@ files = glob.glob(f'{directorio_puntuaciones}/*.txt')
 
 # Función para extraer datos de una línea de texto
 def parse_line(line):
-    match = re.match(r"Nombre: (\w+), Puntuaciones: ([\d, ]+), Total: (\d+)", line)
+    match = re.match(r"Nombre: (\w+), Puntuaciones: ([\d., ]+), Total: ([\d.]+)", line)
     if match:
         nombre, puntuaciones, total = match.groups()
-        puntuaciones = list(map(int, puntuaciones.split(',')))
-        return {'name': nombre, 'puntuaciones': puntuaciones, 'total': int(total)}
+        puntuaciones = list(map(float, puntuaciones.split(',')))
+        return {'name': nombre, 'puntuaciones': puntuaciones, 'total': float(total)}
     else:
         return None
 
@@ -45,7 +45,7 @@ df_grouped = df_puntuaciones.groupby('name').agg({
     'puntuaciones': 'sum'
 }).reset_index()
 
-# Ordenar por total de mayor a menor y seleccionar los 32 mejores
+# Ordenar por puntuaciones de mayor a menor y seleccionar los 32 mejores
 df_top_32 = df_grouped.sort_values(by='puntuaciones', ascending=False).head(32)
 
 # Imprimir el DataFrame para verificar
@@ -55,6 +55,6 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/{fecha_actual}.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']}, Puntuaciones: {row['puntuaciones']}\n")
+        f.write(f"Nombre: {row['name']}, Puntuaciones: {row['puntuaciones']:.1f}\n")
 
 print(f'Archivo {output_file} creado')
