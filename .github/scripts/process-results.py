@@ -20,6 +20,7 @@ def parse_line(line):
     match = re.match(r"Nombre: (\w+), Puntuaciones: ([\d., ]+), Total: ([\d.]+)", line)
     if match:
         nombre, puntuaciones, total = match.groups()
+        nombre = nombre.lower()  # Convertir el nombre a minúsculas para estandarizar
         puntuaciones = list(map(float, puntuaciones.split(',')))
         return {'name': nombre, 'puntuaciones': puntuaciones, 'total': float(total)}
     else:
@@ -55,6 +56,6 @@ print(df_top_32)
 output_file = f'{directorio_resultados}/{fecha_actual}.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']}, Puntuaciones: {row['puntuaciones']:.1f}\n")
+        f.write(f"Nombre: {row['name'].capitalize()}, Puntuaciones: {row['puntuaciones']:.1f}\n")
 
 print(f'Archivo {output_file} creado')
