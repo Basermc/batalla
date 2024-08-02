@@ -1,53 +1,55 @@
-const fetch = require('node-fetch');
-const querystring = require('querystring');
+const https = require('https');
 
-exports.handler = async (event) => {
-    if (event.httpMethod === 'POST') {
-        const body = querystring.parse(event.body);
+exports.handler = async function(event, context) {
+    const { filename, content } = JSON.parse(event.body);
 
-        const filename = body.filename;
-        const content = body.content;
+    const options = {
+        hostname: 'api.github.com',
+        path: '/repos/Basermc/batalla/contents/' + filename,
+        method: 'PUT',
+        headers: {
+            'Authorization': `Bearer ${process.env.GH_TOKEN}`,
+            'User-Agent': 'Netlify Function',
+            'Content-Type': 'application/json'
+        }
+    };
 
-        const repo = 'Basermc/batalla'; // Reemplaza con tu nombre de repositorio
-        const workflow = 'save-results.yml'; // Reemplaza con tu archivo de workflow
-        
-        try {
-            // Enviar una solicitud para ejecutar el workflow
-            const response = await fetch(`https://api.github.com/repos/${repo}/actions/workflows/${workflow}/dispatches`, {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/vnd.github.v3+json',
-                    'Authorization': `Bearer ${process.env.GH_TOKEN}`, // Usa tu token de GitHub aquí
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    ref: 'main', // Cambia si es necesario
-                    inputs: { filename, content }
-                })
+    const data = JSON.stringify({
+        message: `Adding ${filename}`,
+        content: Buffer.from(content).toString('base64')
+    });
+
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+            let responseBody = '';
+
+            res.on('data', (chunk) => {
+                responseBody += chunk;
             });
 
-            if (response.ok) {
-                return {
-                    statusCode: 200,
-                    body: 'Workflow triggered successfully.'
-                };
-            } else {
-                const errorText = await response.text();
-                return {
-                    statusCode: response.status,
-                    body: `Failed to trigger workflow: ${errorText}`
-                };
-            }
-        } catch (error) {
-            return {
+            res.on('end', () => {
+                if (res.statusCode === 201) {
+                    resolve({
+                        statusCode: 200,
+                        body: JSON.stringify({ message: 'Success' })
+                    });
+                } else {
+                    resolve({
+                        statusCode: res.statusCode,
+                        body: responseBody
+                    });
+                }
+            });
+        });
+
+        req.on('error', (e) => {
+            reject({
                 statusCode: 500,
-                body: `Error: ${error.message}`
-            };
-        }
-    } else {
-        return {
-            statusCode: 405,
-            body: 'Method Not Allowed'
-        };
-    }
+                body: JSON.stringify({ error: e.message })
+            });
+        });
+
+        req.write(data);
+        req.end();
+    });
 };
