@@ -196,13 +196,13 @@
                 });
 
                 // Verificar el código de estado HTTP
-                if (response.ok) {
+                if (response.status === 200) {
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
                     // Mostrar código de estado y texto de estado en caso de error
                     const errorText = await response.text();
                     console.error('Error en la respuesta: ', response.status, response.statusText, errorText);
-                    alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
+                    alert(`Hubo un problema al enviar los resultados. Código de estado: ${response.status}`);
                 }
             } catch (error) {
                 console.error('Error en la solicitud: ', error); // Añadir mensaje de error
