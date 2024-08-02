@@ -1,2 +1,0 @@
-Nombre: hola, Puntuaciones: 0, 0, Total: 0
-Nombre: adios, Puntuaciones: 2, 4, Total: 6
