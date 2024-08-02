@@ -1,0 +1,2 @@
+Nombre: luis, Puntuaciones: 0, 0, Total: 0
+Nombre: manolo, Puntuaciones: 0, 1, Total: 1
