@@ -1,5 +1,6 @@
 Nombre: Kori, Puntuaciones: 20.0
 Nombre: Shoot, Puntuaciones: 17.5
+Nombre: Krisan, Puntuaciones: 16.5
 Nombre: Dager, Puntuaciones: 16.4
 Nombre: Tanquecrack, Puntuaciones: 15.0
 Nombre: Bosko, Puntuaciones: 8.5
@@ -8,6 +9,5 @@ Nombre: Coletiyas, Puntuaciones: 8.0
 Nombre: Kmiba, Puntuaciones: 8.0
 Nombre: Juan, Puntuaciones: 7.3
 Nombre: Pepe, Puntuaciones: 5.6
-Nombre: Krisan, Puntuaciones: 5.5
 Nombre: Kaoss, Puntuaciones: 1.0
 Nombre: Nanoxcii, Puntuaciones: 0.6
