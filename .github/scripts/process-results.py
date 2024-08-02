@@ -40,19 +40,22 @@ df = pd.DataFrame(all_data)
 # Explode la columna 'puntuaciones' para normalizar los datos
 df_puntuaciones = df.explode('puntuaciones').reset_index(drop=True)
 
-# Agrupar por nombre y sumar las puntuaciones
-df_grouped = df_puntuaciones.groupby('name').sum().reset_index()
+# Agrupar por nombre y agrupar las puntuaciones individuales
+df_grouped = df.groupby('name').agg({
+    'puntuaciones': lambda x: ', '.join(map(str, [item for sublist in x for item in sublist]))
+}).reset_index()
 
-# Ordenar por total de mayor a menor y seleccionar los 32 mejores
-df_top_32 = df_grouped.sort_values(by='total', ascending=False).head(32)
+# Ordenar por el total de mayor a menor y seleccionar los 32 mejores
+df_top_32 = df.nlargest(32, 'total')
 
 # Imprimir el DataFrame para verificar
 print(df_top_32)
 
-# Guardar los mejores freestylers en un archivo de texto
+# Guardar los mejores freestylers en un archivo de texto con puntuaciones
 output_file = f'{directorio_resultados}/best_freestylers.txt'
 with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
-        f.write(f"Nombre: {row['name']}, Total: {row['total']}\n")
+        puntuaciones_str = ', '.join(map(str, row['puntuaciones']))
+        f.write(f"Nombre: {row['name']}, Puntuaciones: {puntuaciones_str}\n")
 
 print(f'Archivo best_freestylers.txt creado en {directorio_resultados}')
