@@ -1,5 +1,7 @@
 Nombre: Kmiba, Puntuaciones: 8.0
+Nombre: Juan, Puntuaciones: 7.3
 Nombre: Dager, Puntuaciones: 6.4
+Nombre: Pepe, Puntuaciones: 5.6
 Nombre: Krisan, Puntuaciones: 5.5
 Nombre: Kaoss, Puntuaciones: 1.0
 Nombre: Nanoxcii, Puntuaciones: 0.6
