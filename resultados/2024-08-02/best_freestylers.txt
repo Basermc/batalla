@@ -1,8 +1,8 @@
-Nombre: kmiba, Puntuaciones: 1, 1, 1, 1
-Nombre: kmiba, Puntuaciones: 1, 1, 1, 1
-Nombre: dager, Puntuaciones: 1, 1, 1, 0
-Nombre: dager, Puntuaciones: 1, 0, 1, 0
-Nombre: krisan, Puntuaciones: 1, 0, 1, 0
-Nombre: krisan, Puntuaciones: 0, 0, 1, 0
-Nombre: kaoss, Puntuaciones: 0, 0, 0, 1
-Nombre: kaoss, Puntuaciones: 0, 0, 0, 0
+Nombre: kmiba, Puntuaciones: 1, 1, 1, 1, Total: 4
+Nombre: kmiba, Puntuaciones: 1, 1, 1, 1, Total: 4
+Nombre: dager, Puntuaciones: 1, 1, 1, 0, Total: 3
+Nombre: dager, Puntuaciones: 1, 0, 1, 0, Total: 2
+Nombre: krisan, Puntuaciones: 1, 0, 1, 0, Total: 2
+Nombre: krisan, Puntuaciones: 0, 0, 1, 0, Total: 1
+Nombre: kaoss, Puntuaciones: 0, 0, 0, 1, Total: 1
+Nombre: kaoss, Puntuaciones: 0, 0, 0, 0, Total: 0
