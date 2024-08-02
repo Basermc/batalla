@@ -92,6 +92,8 @@
 </head>
 <body>
     <div class="container">
+        <label for="numFreestylers">Número de Freestylers: </label>
+        <input type="number" id="numFreestylers" min="1" value="2">
         <label for="numIntervenciones">Número de Intervenciones: </label>
         <input type="number" id="numIntervenciones" min="1" value="2">
         <button onclick="crearTabla()">Crear Tabla</button>
@@ -109,6 +111,7 @@
 
         async function crearTabla() {
             const participantes = await obtenerParticipantes();
+            const numFreestylers = document.getElementById('numFreestylers').value;
             const numIntervenciones = document.getElementById('numIntervenciones').value;
             const tabla = document.getElementById('tablaPuntuacion');
             
@@ -123,8 +126,12 @@
             tabla.innerHTML += headerRow;
             
             // Crear las filas de freestylers
-            participantes.forEach(participante => {
-                let row = `<tr><td>${participante}</td>`;
+            for (let i = 1; i <= numFreestylers; i++) {
+                let row = '<tr><td><select>';
+                participantes.forEach(participante => {
+                    row += `<option value="${participante}">${participante}</option>`;
+                });
+                row += '</select></td>';
                 for (let j = 1; j <= numIntervenciones; j++) {
                     row += `<td>
                                 <input type="range" min="0" max="5" step="0.1" value="0" onchange="calcularTotal(this)">
@@ -133,7 +140,7 @@
                 }
                 row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
-            });
+            }
         }
 
         function calcularTotal(input) {
@@ -157,7 +164,7 @@
             
             filas.forEach((fila, index) => {
                 if (index === 0) return; // Saltar la fila de encabezado
-                const nombre = fila.querySelector('td').innerText;
+                const nombre = fila.querySelector('select').value;
                 const puntuaciones = [];
                 fila.querySelectorAll('input[type="range"]').forEach(input => {
                     puntuaciones.push(parseFloat(input.value) || 0);
