@@ -1,7 +1,6 @@
 name: Process Results
 
 on: push
-
 jobs:
   process-results:
     runs-on: ubuntu-latest
@@ -22,6 +21,12 @@ jobs:
 
     - name: Run the results processing script
       run: python .github/scripts/process-results.py
+
+    - name: List files in the directory
+      run: |
+        ls -la resultados/${{ github.event.inputs.date }}
+        ls -la resultados/${{ github.event.inputs.date }}/best_freestylers.txt
+        ls -la resultados/${{ github.event.inputs.date }}/resultados_agrupados.csv
 
     - name: Commit and push results
       env:
