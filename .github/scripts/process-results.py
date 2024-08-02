@@ -57,4 +57,4 @@ with open(output_file, 'w') as f:
     for index, row in df_top_32.iterrows():
         f.write(f"Nombre: {row['name']}, Puntuaciones: {row['puntuaciones']}\n")
 
-print(f'Archivo {fecha_actual}.txt creado en {directorio_resultados}')
+print(f'Archivo {output_file} creado')
