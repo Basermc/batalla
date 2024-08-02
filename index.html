@@ -195,14 +195,11 @@
                     })
                 });
 
-                const responseText = await response.text(); // Leer el cuerpo de la respuesta
-
-                if (response.ok) {
-                    console.log('Respuesta del servidor: ', responseText); // Mostrar la respuesta en consola
+                if (response.status === 200) {
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
-                    console.error('Error en la respuesta: ', responseText); // Mostrar la respuesta en consola
-                    alert('Hubo un problema al enviar los resultados.');
+                    console.error('Error en la respuesta: ', response.status, response.statusText); // Mostrar el código de estado y el texto de estado
+                    alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
                 console.error('Error en la solicitud: ', error); // Añadir mensaje de error
