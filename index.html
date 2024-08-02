@@ -92,8 +92,6 @@
 </head>
 <body>
     <div class="container">
-        <label for="numFreestylers">Número de Freestylers: </label>
-        <input type="number" id="numFreestylers" min="1" value="2">
         <label for="numIntervenciones">Número de Intervenciones: </label>
         <input type="number" id="numIntervenciones" min="1" value="2">
         <button onclick="crearTabla()">Crear Tabla</button>
@@ -103,8 +101,14 @@
     </table>
     <button onclick="finalizar()">Finalizar y Guardar</button>
     <script>
-        function crearTabla() {
-            const numFreestylers = document.getElementById('numFreestylers').value;
+        async function obtenerParticipantes() {
+            const response = await fetch('participantes.txt');
+            const text = await response.text();
+            return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
+        }
+
+        async function crearTabla() {
+            const participantes = await obtenerParticipantes();
             const numIntervenciones = document.getElementById('numIntervenciones').value;
             const tabla = document.getElementById('tablaPuntuacion');
             
@@ -119,8 +123,8 @@
             tabla.innerHTML += headerRow;
             
             // Crear las filas de freestylers
-            for (let i = 1; i <= numFreestylers; i++) {
-                let row = `<tr><td><input type="text" placeholder="Nombre Freestyler ${i}"></td>`;
+            participantes.forEach(participante => {
+                let row = `<tr><td>${participante}</td>`;
                 for (let j = 1; j <= numIntervenciones; j++) {
                     row += `<td>
                                 <input type="range" min="0" max="5" step="0.1" value="0" onchange="calcularTotal(this)">
@@ -129,7 +133,7 @@
                 }
                 row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
-            }
+            });
         }
 
         function calcularTotal(input) {
@@ -153,7 +157,7 @@
             
             filas.forEach((fila, index) => {
                 if (index === 0) return; // Saltar la fila de encabezado
-                const nombre = fila.querySelector('input[type="text"]').value;
+                const nombre = fila.querySelector('td').innerText;
                 const puntuaciones = [];
                 fila.querySelectorAll('input[type="range"]').forEach(input => {
                     puntuaciones.push(parseFloat(input.value) || 0);
@@ -165,22 +169,30 @@
             const nombreJurado = prompt("Introduce tu nombre de jurado:");
             const txtContent = resultados.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
-            const response = await fetch('https://incredible-torrone-545d43.netlify.app/.netlify/functions/trigger-workflow', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-                body: new URLSearchParams({
-                    filename: `${nombreJurado}.txt`,
-                    content: txtContent
-                })
-            });
+            console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
-            if (response.ok) {
-                alert('Resultados enviados para guardar en el repositorio.');
-            } else {
+            try {
+                const response = await fetch('https://incredible-torrone-545d43.netlify.app/.netlify/functions/trigger-workflow', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: new URLSearchParams({
+                        filename: `${nombreJurado}.txt`,
+                        content: txtContent
+                    })
+                });
+
+                if (response.ok) {
+                    alert('Resultados enviados para guardar en el repositorio.');
+                } else {
+                    const errorMessage = await response.text();
+                    console.error('Error en la respuesta: ', errorMessage); // Añadir mensaje de error
+                    alert('Hubo un problema al enviar los resultados.');
+                }
+            } catch (error) {
+                console.error('Error en la solicitud: ', error); // Añadir mensaje de error
                 alert('Hubo un problema al enviar los resultados.');
-                console.error(await response.text());
             }
         }
     </script>
