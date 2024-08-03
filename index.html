@@ -128,7 +128,6 @@
     </table>
     <div id="fixed-container">
         <button onclick="finalizar()">Finalizar y Guardar</button>
-        <button onclick="actualizarParticipantes()">Actualizar Participantes</button>
         <div id="warningMessage" class="warning" style="display: none;">
             Recuerda guardar tus cambios antes de abandonar la página.
         </div>
@@ -185,7 +184,7 @@
             // Crear la fila de encabezado
             let headerRow = '<tr><th>Freestyler</th>';
             for (let i = 1; i <= numIntervenciones; i++) {
-                headerRow += `<th>Intervención ${i}</th>`;
+                headerRow += <th>Intervención ${i}</th>;
             }
             headerRow += '<th>Total</th></tr>';
             tabla.innerHTML += headerRow;
@@ -195,31 +194,31 @@
                 let row;
                 if (recuperado && i <= datos.length) {
                     const data = datos[i - 1];
-                    row = `<tr>
-                        <td><select>`;
+                    row = <tr>
+                        <td><select>;
                     participantes.forEach(participante => {
                         const selected = data.nombre === participante ? 'selected' : '';
-                        row += `<option value="${participante}" ${selected}>${participante}</option>`;
+                        row += <option value="${participante}" ${selected}>${participante}</option>;
                     });
-                    row += `</select></td>`;
+                    row += </select></td>;
                     data.puntuaciones.forEach(puntuacion => {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="${puntuacion}" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">${puntuacion}</span>
-                        </td>`;
+                        </td>;
                     });
-                    row += `<td class="total">${data.total}</td></tr>`;
+                    row += <td class="total">${data.total}</td></tr>;
                 } else {
                     row = '<tr><td><select>';
                     participantes.forEach(participante => {
-                        row += `<option value="${participante}">${participante}</option>`;
+                        row += <option value="${participante}">${participante}</option>;
                     });
                     row += '</select></td>';
                     for (let j = 1; j <= numIntervenciones; j++) {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="0" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">0.0</span>
-                        </td>`;
+                        </td>;
                     }
                     row += '<td class="total">0.0</td></tr>';
                 }
@@ -258,7 +257,7 @@
                 return;
             }
             const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
-            const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
+            const txtContent = datos.map(r => Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}).join('\n');
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
@@ -269,7 +268,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: new URLSearchParams({
-                        filename: `${nombreJurado}.txt`,
+                        filename: ${nombreJurado}.txt,
                         content: txtContent
                     })
                 });
@@ -289,20 +288,6 @@
 
         function recuperar() {
             cargarDatos(); // Cargar datos almacenados
-        }
-
-        async function actualizarParticipantes() {
-            const participantes = await obtenerParticipantes();
-            const selects = document.querySelectorAll('table select');
-
-            selects.forEach(select => {
-                select.innerHTML = ''; // Limpiar opciones actuales
-                participantes.forEach(participante => {
-                    select.innerHTML += `<option value="${participante}">${participante}</option>`;
-                });
-            });
-
-            document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
         }
 
         window.addEventListener('beforeunload', function (e) {
