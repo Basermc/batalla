@@ -1,2 +1,0 @@
-Nombre: itzar, Puntuaciones: 2.5, 0, Total: 2.5
-Nombre: ramon, Puntuaciones: 3, 2, Total: 5.0

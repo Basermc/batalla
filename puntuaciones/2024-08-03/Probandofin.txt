@@ -1,2 +1,0 @@
-Nombre: itzar, Puntuaciones: 1, 0, Total: 1.0
-Nombre: prueba, Puntuaciones: 0, 2, Total: 2.0
