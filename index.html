@@ -291,11 +291,17 @@
             cargarDatos(); // Cargar datos almacenados
         }
 
-        function actualizarParticipantes() {
-            localStorage.removeItem('tablaData');
-            localStorage.removeItem('numFreestylers');
-            localStorage.removeItem('numIntervenciones');
-            crearTabla(); // Recrear la tabla vacía
+        async function actualizarParticipantes() {
+            const participantes = await obtenerParticipantes();
+            const selects = document.querySelectorAll('table select');
+
+            selects.forEach(select => {
+                select.innerHTML = ''; // Limpiar opciones actuales
+                participantes.forEach(participante => {
+                    select.innerHTML += `<option value="${participante}">${participante}</option>`;
+                });
+            });
+
             document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
         }
 
