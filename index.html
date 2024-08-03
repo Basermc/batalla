@@ -117,6 +117,10 @@
     <script>
         let formChanged = false;
 
+        document.addEventListener('DOMContentLoaded', () => {
+            cargarTablaDesdeLocalStorage();
+        });
+
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
             const text = await response.text();
@@ -158,6 +162,8 @@
             
             formChanged = true; // Indicar que el formulario ha cambiado
             document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
+
+            guardarTablaEnLocalStorage();
         }
 
         function mostrarValor(input) {
@@ -165,6 +171,7 @@
             valueSpan.innerText = parseFloat(input.value).toFixed(1);
             formChanged = true; // Indicar que el formulario ha cambiado
             document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
+            guardarTablaEnLocalStorage();
         }
 
         function calcularTotal(input) {
@@ -177,6 +184,7 @@
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
             formChanged = true; // Indicar que el formulario ha cambiado
             document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
+            guardarTablaEnLocalStorage();
         }
 
         async function finalizar() {
@@ -230,6 +238,58 @@
                 console.log('Error en la solicitud: ', error);
                 alert('Hubo un error al enviar los resultados.');
             }
+        }
+
+        function guardarTablaEnLocalStorage() {
+            const tabla = document.getElementById('tablaPuntuacion');
+            const filas = tabla.querySelectorAll('tr');
+            const tablaData = [];
+
+            filas.forEach((fila, index) => {
+                if (index === 0) return; // Saltar la fila de encabezado
+                const cells = fila.querySelectorAll('td');
+                const rowData = {
+                    nombre: cells[0].querySelector('select').value,
+                    puntuaciones: [],
+                    total: parseFloat(cells[cells.length - 1].innerText)
+                };
+                cells.forEach((cell, cellIndex) => {
+                    if (cellIndex > 0 && cellIndex < cells.length - 1) {
+                        rowData.puntuaciones.push(parseFloat(cell.querySelector('input[type="range"]').value));
+                    }
+                });
+                tablaData.push(rowData);
+            });
+
+            localStorage.setItem('tablaData', JSON.stringify(tablaData));
+        }
+
+        function cargarTablaDesdeLocalStorage() {
+            const tablaData = JSON.parse(localStorage.getItem('tablaData'));
+            if (!tablaData) return;
+
+            document.getElementById('numFreestylers').value = tablaData.length;
+            document.getElementById('numIntervenciones').value = tablaData[0].puntuaciones.length;
+
+            crearTabla();
+
+            const tabla = document.getElementById('tablaPuntuacion');
+            tablaData.forEach((rowData, rowIndex) => {
+                const row = tabla.rows[rowIndex + 1];
+                const select = row.querySelector('select');
+                select.value = rowData.nombre;
+
+                rowData.puntuaciones.forEach((puntuacion, index) => {
+                    const input = row.querySelectorAll('input[type="range"]')[index];
+                    input.value = puntuacion;
+                    mostrarValor(input);
+                });
+
+                calcularTotal(row.querySelector('input[type="range"]'));
+            });
+
+            formChanged = false; // Restablecer la bandera de cambios al cargar
+            document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
         }
 
         window.addEventListener('beforeunload', function (e) {
