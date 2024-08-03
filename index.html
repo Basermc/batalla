@@ -73,6 +73,7 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
+            display: none; /* Ocultar por defecto */
         }
         th, td {
             border: 1px solid #95a5a6; /* Borde gris claro */
@@ -115,10 +116,10 @@
         <button onclick="crearTabla()">Crear Tabla</button>
         <button onclick="recuperar()">Recuperar Datos</button>
     </div>
-    <table id="tablaPuntuacion" style="display: none;">
+    <table id="tablaPuntuacion">
         <!-- La tabla se generará aquí -->
     </table>
-    <div class="pagination" id="pagination" style="display: none;">
+    <div class="pagination" id="pagination">
         <button onclick="changePage(-1)">Anterior</button>
         <button onclick="changePage(1)">Siguiente</button>
     </div>
@@ -129,7 +130,7 @@
     <script>
         let formChanged = false;
         let currentPage = 1;
-        const rowsPerPage = 8;
+        const rowsPerPage = 10;
 
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
@@ -175,7 +176,7 @@
             const numIntervenciones = document.getElementById('numIntervenciones').value;
             const tabla = document.getElementById('tablaPuntuacion');
             
-            tabla.innerHTML = ''; // Limpiar la tabla
+            let filas = [];
             
             // Crear la fila de encabezado
             let headerRow = '<tr><th>Freestyler</th>';
@@ -183,10 +184,9 @@
                 headerRow += `<th>Intervención ${i}</th>`;
             }
             headerRow += '<th>Total</th></tr>';
-            tabla.innerHTML += headerRow;
+            filas.push(headerRow);
             
             // Crear las filas de freestylers
-            let filas = [];
             for (let i = 1; i <= numFreestylers; i++) {
                 let row;
                 if (recuperado && i <= datos.length) {
@@ -237,8 +237,8 @@
             const start = (currentPage - 1) * rowsPerPage;
             const end = start + rowsPerPage;
 
-            tabla.innerHTML = tabla.querySelector('tr').outerHTML; // Mantener encabezado
-            filas.slice(start, end).forEach(fila => {
+            tabla.innerHTML = filas[0]; // Mantener encabezado
+            filas.slice(1).slice(start, end).forEach(fila => {
                 tabla.innerHTML += fila;
             });
         }
