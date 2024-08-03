@@ -210,11 +210,24 @@
         }
 
         // Agregar evento beforeunload
-        window.addEventListener('beforeunload', function (e) {
-            // Mostrar el mensaje de advertencia
+        function handleBeforeUnload(e) {
             e.preventDefault();
-            e.returnValue = ''; // Mostrar el mensaje de advertencia en algunos navegadores
-        });
+            e.returnValue = ''; // Para Chrome
+            return ''; // Para otros navegadores
+        }
+
+        function isMobile() {
+            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+        }
+
+        if (!isMobile()) {
+            window.addEventListener('beforeunload', handleBeforeUnload);
+        } else {
+            // En dispositivos móviles, usa un alert para advertir al usuario antes de recargar
+            window.onbeforeunload = function() {
+                return '¿Estás seguro de que deseas abandonar esta página? Los cambios no guardados se perderán.';
+            };
+        }
     </script>
 </body>
 </html>
