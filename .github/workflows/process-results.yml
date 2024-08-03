@@ -2,11 +2,6 @@ name: Process Results
 
 on:
   workflow_dispatch:
-    inputs:
-      environment:
-        description: 'poner algo'
-        type: environment
-        required: true
 
 jobs:
   process-results:
