@@ -1,6 +1,11 @@
-name: Process Results
+on:
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: 'Environment to run tests against'
+        type: environment
+        required: true
 
-on:  push
 
 jobs:
   process-results:
