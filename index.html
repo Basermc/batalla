@@ -221,12 +221,14 @@
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
+                    formChanged = false; // Restablecer la bandera después de guardar
+                    document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
-                // Eliminado el catch para ignorar otros errores
-                console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
+                console.log('Error en la solicitud: ', error);
+                alert('Hubo un error al enviar los resultados.');
             }
         }
 
