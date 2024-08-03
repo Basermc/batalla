@@ -9,7 +9,7 @@ on:
 
 
 jobs:
-  process-results:
+  procesar-resultados:
     runs-on: ubuntu-latest
 
     steps:
