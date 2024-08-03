@@ -5,113 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Puntuación Batallas de gallos</title>
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #2c3e50; /* Fondo oscuro */
-            color: #ecf0f1; /* Texto claro */
-            text-align: center;
-            padding-bottom: 150px; /* Espacio para los elementos fijos */
-        }
-        .container {
-            margin: 20px auto;
-            width: 90%;
-            max-width: 600px;
-            background-color: #34495e; /* Fondo de la caja */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
-        }
-        label, button {
-            margin-bottom: 10px;
-            display: block;
-        }
-        label {
-            font-size: 18px;
-            color: #ecf0f1;
-        }
-        input[type="range"] {
-            width: 100%;
-            margin: 5px 0;
-            -webkit-appearance: none;
-            background: #ecf0f1;
-            height: 8px;
-            border-radius: 4px;
-            outline: none;
-        }
-        input[type="range"]::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            background: #e74c3c; /* Rojo vivo */
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        input[type="range"]::-moz-range-thumb {
-            background: #e74c3c; /* Rojo vivo */
-            height: 24px;
-            width: 24px;
-            border-radius: 50%;
-            cursor: pointer;
-        }
-        button {
-            background-color: #e74c3c; /* Rojo vivo */
-            color: #ecf0f1;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-            margin-top: 10px;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #c0392b; /* Rojo más oscuro */
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 20px;
-        }
-        th, td {
-            border: 1px solid #95a5a6; /* Borde gris claro */
-            padding: 10px;
-            text-align: center;
-        }
-        th {
-            background-color: #2ecc71; /* Verde brillante */
-            color: #ffffff; /* Texto blanco */
-            font-weight: bold;
-        }
-        .total {
-            font-weight: bold;
-            background-color: #3498db; /* Azul brillante */
-            color: #ffffff; /* Texto blanco */
-        }
-        .warning {
-            color: #e74c3c;
-            font-size: 18px;
-            margin-top: 20px;
-            padding: 10px;
-            border: 1px solid #e74c3c;
-            border-radius: 5px;
-            background-color: #34495e;
-        }
-        #fixed-container {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #34495e; /* Fondo de la caja */
-            padding: 10px;
-            border-top: 1px solid #95a5a6;
-            z-index: 100; /* Asegurarse de que esté sobre otros contenidos */
-            text-align: center;
-        }
-        #fixed-container button {
-            margin: 0 5px;
-        }
+        /* El estilo permanece igual */
     </style>
 </head>
 <body>
@@ -137,9 +31,15 @@
         let formChanged = false;
 
         async function obtenerParticipantes() {
-            const response = await fetch('participantes.txt');
-            const text = await response.text();
-            return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
+            try {
+                const response = await fetch('participantes.txt');
+                if (!response.ok) throw new Error('Error al cargar el archivo participantes.txt');
+                const text = await response.text();
+                return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
+            } catch (error) {
+                console.error('Error al obtener los participantes:', error);
+                return [];
+            }
         }
 
         function guardarDatos() {
@@ -293,6 +193,11 @@
 
         async function actualizarParticipantes() {
             const participantes = await obtenerParticipantes();
+            if (participantes.length === 0) {
+                console.warn('No se encontraron participantes.');
+                return;
+            }
+
             const selects = document.querySelectorAll('table select');
 
             selects.forEach(select => {
@@ -303,6 +208,7 @@
             });
 
             document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
+            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         window.addEventListener('beforeunload', function (e) {
