@@ -256,8 +256,15 @@
                 alert('El nombre de jurado es obligatorio.');
                 return;
             }
+
             const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
             const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
+
+            // Preguntar al usuario si desea sobrescribir el archivo
+            const sobreescribir = confirm(`¿Deseas sobrescribir el archivo con el nombre ${nombreJurado}.txt?`);
+            if (!sobreescribir) {
+                return; // Cancelar el proceso si el usuario no desea sobrescribir
+            }
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
