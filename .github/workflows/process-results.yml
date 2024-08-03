@@ -1,10 +1,11 @@
+name: procesar resultados
 on:
   workflow_dispatch:
     inputs:
       environment:
-        description: 'Environment to run tests against'
-        type: environment
+        description: 'pon algo'
         required: true
+
 
 
 jobs:
