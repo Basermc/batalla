@@ -12,12 +12,12 @@
             background-color: #2c3e50; /* Fondo oscuro */
             color: #ecf0f1; /* Texto claro */
             text-align: center;
-            overflow-x: hidden; /* Evitar desplazamiento horizontal */
+            padding-bottom: 150px; /* Espacio para los elementos fijos */
         }
         .container {
             margin: 20px auto;
             width: 90%;
-            max-width: 1000px; /* Aumentar el ancho máximo del contenedor */
+            max-width: 600px;
             background-color: #34495e; /* Fondo de la caja */
             padding: 20px;
             border-radius: 8px;
@@ -30,14 +30,6 @@
         label {
             font-size: 18px;
             color: #ecf0f1;
-        }
-        input[type="number"], input[type="text"] {
-            width: calc(100% - 20px); /* Ajustar el ancho para el relleno */
-            padding: 10px;
-            margin: 5px 0;
-            border: 1px solid #95a5a6;
-            border-radius: 4px;
-            font-size: 16px;
         }
         input[type="range"] {
             width: 100%;
@@ -106,6 +98,20 @@
             border-radius: 5px;
             background-color: #34495e;
         }
+        #fixed-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #34495e; /* Fondo de la caja */
+            padding: 10px;
+            border-top: 1px solid #95a5a6;
+            z-index: 100; /* Asegurarse de que esté sobre otros contenidos */
+            text-align: center;
+        }
+        #fixed-container button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -117,13 +123,10 @@
         <button onclick="crearTabla()">Crear Tabla</button>
         <button onclick="recuperar()">Recuperar Datos</button>
     </div>
-    <div class="table-container">
-        <table id="tablaPuntuacion">
-            <!-- La tabla se generará aquí -->
-        </table>
-    </div>
-    <div class="fixed-buttons">
-        <input type="text" id="nombreJurado" placeholder="Introduce tu nombre de jurado" />
+    <table id="tablaPuntuacion">
+        <!-- La tabla se generará aquí -->
+    </table>
+    <div id="fixed-container">
         <button onclick="finalizar()">Finalizar y Guardar</button>
         <div id="warningMessage" class="warning" style="display: none;">
             Recuerda guardar tus cambios antes de abandonar la página.
@@ -248,7 +251,7 @@
         async function finalizar() {
             guardarDatos(); // Guardar los datos antes de finalizar
 
-            const nombreJurado = document.getElementById('nombreJurado').value.trim();
+            const nombreJurado = prompt("Introduce tu nombre de jurado:");
             if (!nombreJurado) {
                 alert('El nombre de jurado es obligatorio.');
                 return;
@@ -279,7 +282,7 @@
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
-                console.log('Error en la solicitud ignorado, el código de estado fue: ', error.message);
+                console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
 
