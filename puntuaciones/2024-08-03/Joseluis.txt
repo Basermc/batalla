@@ -1,0 +1,2 @@
+Nombre: shoot, Puntuaciones: 1, 2, Total: 3.0
+Nombre: shoot, Puntuaciones: 3.5, 3, Total: 6.5
