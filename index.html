@@ -103,7 +103,59 @@
     </table>
     <button onclick="finalizar()">Finalizar y Guardar</button>
     <script>
-        let formChanged = false;
+        window.addEventListener('beforeunload', (event) => {
+            // Personalizar el mensaje puede no ser soportado en todos los navegadores
+            event.preventDefault();
+            event.returnValue = ''; // Algunos navegadores requieren esto para mostrar el mensaje
+        });
+
+        function guardarEstado() {
+            const numFreestylers = document.getElementById('numFreestylers').value;
+            const numIntervenciones = document.getElementById('numIntervenciones').value;
+            const tabla = document.getElementById('tablaPuntuacion');
+            const filas = tabla.querySelectorAll('tr');
+            const data = {
+                numFreestylers,
+                numIntervenciones,
+                tabla: Array.from(filas).map(fila => {
+                    const select = fila.querySelector('select');
+                    const inputs = fila.querySelectorAll('input[type="range"]');
+                    if (select) {
+                        return {
+                            nombre: select.value,
+                            puntuaciones: Array.from(inputs).map(input => input.value),
+                            total: fila.querySelector('.total').innerText
+                        };
+                    }
+                }).filter(item => item)
+            };
+            localStorage.setItem('tablaPuntuacion', JSON.stringify(data));
+        }
+
+        function cargarEstado() {
+            const data = JSON.parse(localStorage.getItem('tablaPuntuacion'));
+            if (data) {
+                document.getElementById('numFreestylers').value = data.numFreestylers;
+                document.getElementById('numIntervenciones').value = data.numIntervenciones;
+                crearTabla();
+                const filas = document.querySelectorAll('#tablaPuntuacion tr');
+                filas.forEach((fila, index) => {
+                    if (index > 0) {
+                        const item = data.tabla[index - 1];
+                        if (item) {
+                            fila.querySelector('select').value = item.nombre;
+                            const inputs = fila.querySelectorAll('input[type="range"]');
+                            inputs.forEach((input, idx) => {
+                                input.value = item.puntuaciones[idx];
+                                mostrarValor(input);
+                                calcularTotal(input);
+                            });
+                            fila.querySelector('.total').innerText = item.total;
+                        }
+                    }
+                });
+            }
+        }
 
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
@@ -143,14 +195,11 @@
                 row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
             }
-            
-            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         function mostrarValor(input) {
             const valueSpan = input.nextElementSibling;
             valueSpan.innerText = parseFloat(input.value).toFixed(1);
-            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         function calcularTotal(input) {
@@ -161,7 +210,6 @@
                 total += parseFloat(input.value) || 0;
             });
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
-            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         async function finalizar() {
@@ -206,7 +254,6 @@
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
-                    formChanged = false; // Indicar que el formulario se ha guardado
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
@@ -215,7 +262,7 @@
                 console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
-        
+
         // Cargar el estado de la tabla al cargar la página
         window.addEventListener('load', cargarEstado);
         window.addEventListener('beforeunload', guardarEstado);
