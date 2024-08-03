@@ -1,13 +1,5 @@
 name: procesar resultados
-on:
-  workflow_dispatch:
-    inputs:
-      environment:
-        description: 'pon algo'
-        required: true
-
-
-
+on: push
 jobs:
   procesar-resultados:
     runs-on: ubuntu-latest
