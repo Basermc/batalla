@@ -1,1 +1,3 @@
+Nombre: Kori, Puntuaciones: 9.5
+Nombre: Bosko, Puntuaciones: 8.5
 Nombre: Krisan, Puntuaciones: 0.0
