@@ -24,24 +24,94 @@ exports.handler = async function(event, context) {
     const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}`;
     const path = `puntuaciones/${formattedDate}/${filename}`;
 
-    // Configuración para la API de GitHub
-    const options = {
+    // Primero, intentamos obtener el SHA del archivo para ver si ya existe
+    const getOptions = {
         hostname: 'api.github.com',
         path: `/repos/Basermc/batalla/contents/${path}`,
-        method: 'PUT',
+        method: 'GET',
         headers: {
             'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
-            'User-Agent': 'Netlify Function',
-            'Content-Type': 'application/json'
+            'User-Agent': 'Netlify Function'
         }
     };
 
-    const data = JSON.stringify({
-        message: `Adding ${path} to resultados branch`,
-        content: Buffer.from(content).toString('base64'),
-        branch: 'resultados'  // Especificar la rama en la que hacer el commit
-    });
+    try {
+        const sha = await getFileSHA(getOptions);
 
+        // Ahora que tenemos el SHA, podemos actualizar el archivo
+        const putOptions = {
+            hostname: 'api.github.com',
+            path: `/repos/Basermc/batalla/contents/${path}`,
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+                'User-Agent': 'Netlify Function',
+                'Content-Type': 'application/json'
+            }
+        };
+
+        const data = JSON.stringify({
+            message: `Updating ${path}`,
+            content: Buffer.from(content).toString('base64'),
+            sha: sha
+        });
+
+        const response = await sendRequest(putOptions, data);
+
+        if (response.statusCode === 200) {
+            return {
+                statusCode: 200,
+                body: 'File updated successfully'
+            };
+        } else {
+            return {
+                statusCode: response.statusCode,
+                body: response.body
+            };
+        }
+    } catch (error) {
+        // Si el archivo no existe, simplemente lo creamos
+        if (error.statusCode === 404) {
+            const putOptions = {
+                hostname: 'api.github.com',
+                path: `/repos/Basermc/batalla/contents/${path}`,
+                method: 'PUT',
+                headers: {
+                    'Authorization': `Bearer ${process.env.GITHUB_TOKEN}`,
+                    'User-Agent': 'Netlify Function',
+                    'Content-Type': 'application/json'
+                }
+            };
+
+            const data = JSON.stringify({
+                message: `Creating ${path}`,
+                content: Buffer.from(content).toString('base64')
+            });
+
+            const response = await sendRequest(putOptions, data);
+
+            if (response.statusCode === 201) {
+                return {
+                    statusCode: 200,
+                    body: 'File created successfully'
+                };
+            } else {
+                return {
+                    statusCode: response.statusCode,
+                    body: response.body
+                };
+            }
+        } else {
+            return {
+                statusCode: error.statusCode || 500,
+                body: error.body || 'Error occurred'
+            };
+        }
+    }
+};
+
+// Función para obtener el SHA del archivo
+function getFileSHA(options) {
     return new Promise((resolve, reject) => {
         const req = https.request(options, (res) => {
             let responseBody = '';
@@ -51,13 +121,11 @@ exports.handler = async function(event, context) {
             });
 
             res.on('end', () => {
-                if (res.statusCode === 201) {
-                    resolve({
-                        statusCode: 200,
-                        body: 'Success'
-                    });
+                if (res.statusCode === 200) {
+                    const fileData = JSON.parse(responseBody);
+                    resolve(fileData.sha);
                 } else {
-                    resolve({
+                    reject({
                         statusCode: res.statusCode,
                         body: responseBody
                     });
@@ -72,7 +140,36 @@ exports.handler = async function(event, context) {
             });
         });
 
+        req.end();
+    });
+}
+
+// Función para enviar la solicitud HTTP
+function sendRequest(options, data) {
+    return new Promise((resolve, reject) => {
+        const req = https.request(options, (res) => {
+            let responseBody = '';
+
+            res.on('data', (chunk) => {
+                responseBody += chunk;
+            });
+
+            res.on('end', () => {
+                resolve({
+                    statusCode: res.statusCode,
+                    body: responseBody
+                });
+            });
+        });
+
+        req.on('error', (e) => {
+            reject({
+                statusCode: 500,
+                body: e.message
+            });
+        });
+
         req.write(data);
         req.end();
     });
-};
+}
