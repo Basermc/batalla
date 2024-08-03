@@ -256,7 +256,6 @@
                 alert('El nombre de jurado es obligatorio.');
                 return;
             }
-
             const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
             const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
@@ -269,24 +268,21 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: new URLSearchParams({
-                        filename: `${nombreJurado}.txt`, // Nombre del archivo a sobrescribir
+                        filename: `${nombreJurado}.txt`,
                         content: txtContent
                     })
                 });
 
-                console.log('Código de estado de la respuesta:', response.status); // Añadir mensaje de depuración
-
-                if (response.ok) {
+                // Verificar solo el código de estado
+                if (response.status === 200) {
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
                 } else {
-                    const errorText = await response.text(); // Leer la respuesta de error
-                    alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status + '. Mensaje de error: ' + errorText);
+                    alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
-                console.error('Error en la solicitud: ', error);
-                alert('Hubo un problema al enviar los resultados. Por favor, revisa la consola para más detalles.');
+                console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
 
