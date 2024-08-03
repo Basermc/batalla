@@ -103,6 +103,8 @@
     </table>
     <button onclick="finalizar()">Finalizar y Guardar</button>
     <script>
+        let formChanged = false;
+
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
             const text = await response.text();
@@ -141,11 +143,14 @@
                 row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
             }
+            
+            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         function mostrarValor(input) {
             const valueSpan = input.nextElementSibling;
             valueSpan.innerText = parseFloat(input.value).toFixed(1);
+            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         function calcularTotal(input) {
@@ -156,6 +161,7 @@
                 total += parseFloat(input.value) || 0;
             });
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
+            formChanged = true; // Indicar que el formulario ha cambiado
         }
 
         async function finalizar() {
@@ -200,6 +206,7 @@
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
+                    formChanged = false; // Indicar que el formulario se ha guardado
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
@@ -210,24 +217,13 @@
         }
 
         // Agregar evento beforeunload
-        function handleBeforeUnload(e) {
-            e.preventDefault();
-            e.returnValue = ''; // Para Chrome
-            return ''; // Para otros navegadores
-        }
-
-        function isMobile() {
-            return /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-        }
-
-        if (!isMobile()) {
-            window.addEventListener('beforeunload', handleBeforeUnload);
-        } else {
-            // En dispositivos móviles, usa un alert para advertir al usuario antes de recargar
-            window.onbeforeunload = function() {
-                return '¿Estás seguro de que deseas abandonar esta página? Los cambios no guardados se perderán.';
-            };
-        }
+        window.onbeforeunload = function (e) {
+            if (formChanged) {
+                const confirmationMessage = '¿Estás seguro de que deseas abandonar esta página? Los cambios no guardados se perderán.';
+                (e || window.event).returnValue = confirmationMessage;
+                return confirmationMessage;
+            }
+        };
     </script>
 </body>
 </html>
