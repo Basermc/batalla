@@ -128,6 +128,7 @@
     </table>
     <div id="fixed-container">
         <button onclick="finalizar()">Finalizar y Guardar</button>
+        <button onclick="actualizarParticipantes()">Actualizar Participantes</button>
         <div id="warningMessage" class="warning" style="display: none;">
             Recuerda guardar tus cambios antes de abandonar la página.
         </div>
@@ -288,6 +289,14 @@
 
         function recuperar() {
             cargarDatos(); // Cargar datos almacenados
+        }
+
+        function actualizarParticipantes() {
+            localStorage.removeItem('tablaData');
+            localStorage.removeItem('numFreestylers');
+            localStorage.removeItem('numIntervenciones');
+            crearTabla(); // Recrear la tabla vacía
+            document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
         }
 
         window.addEventListener('beforeunload', function (e) {
