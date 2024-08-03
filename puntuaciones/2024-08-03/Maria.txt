@@ -1,0 +1,2 @@
+Nombre: bosko, Puntuaciones: 5, 3.5, Total: 8.5
+Nombre: kori, Puntuaciones: 4.5, 5, Total: 9.5
