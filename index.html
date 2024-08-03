@@ -106,6 +106,7 @@
         <label for="numIntervenciones">Número de Intervenciones: </label>
         <input type="number" id="numIntervenciones" min="1" value="2">
         <button onclick="crearTabla()">Crear Tabla</button>
+        <button onclick="recuperar()">Recuperar Datos</button>
     </div>
     <table id="tablaPuntuacion">
         <!-- La tabla se generará aquí -->
@@ -117,17 +118,45 @@
     <script>
         let formChanged = false;
 
-        document.addEventListener('DOMContentLoaded', () => {
-            cargarTablaDesdeLocalStorage();
-        });
-
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
             const text = await response.text();
             return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
         }
 
-        async function crearTabla() {
+        function guardarDatos() {
+            const tabla = document.getElementById('tablaPuntuacion');
+            const filas = tabla.querySelectorAll('tr');
+            const datos = [];
+
+            filas.forEach((fila, index) => {
+                if (index === 0) return; // Saltar la fila de encabezado
+                const nombre = fila.querySelector('select').value;
+                const puntuaciones = [];
+                fila.querySelectorAll('input[type="range"]').forEach(input => {
+                    puntuaciones.push(input.value);
+                });
+                const total = fila.querySelector('.total').innerText;
+                datos.push({ nombre, puntuaciones, total });
+            });
+
+            localStorage.setItem('tablaData', JSON.stringify(datos));
+            localStorage.setItem('numFreestylers', document.getElementById('numFreestylers').value);
+            localStorage.setItem('numIntervenciones', document.getElementById('numIntervenciones').value);
+            formChanged = false;
+        }
+
+        function cargarDatos() {
+            const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
+            const numFreestylers = localStorage.getItem('numFreestylers') || '2';
+            const numIntervenciones = localStorage.getItem('numIntervenciones') || '2';
+            
+            document.getElementById('numFreestylers').value = numFreestylers;
+            document.getElementById('numIntervenciones').value = numIntervenciones;
+            crearTabla(true, datos); // Cargar tabla con datos
+        }
+
+        async function crearTabla(recuperado = false, datos = []) {
             const participantes = await obtenerParticipantes();
             const numFreestylers = document.getElementById('numFreestylers').value;
             const numIntervenciones = document.getElementById('numIntervenciones').value;
@@ -145,25 +174,42 @@
             
             // Crear las filas de freestylers
             for (let i = 1; i <= numFreestylers; i++) {
-                let row = '<tr><td><select>';
-                participantes.forEach(participante => {
-                    row += `<option value="${participante}">${participante}</option>`;
-                });
-                row += '</select></td>';
-                for (let j = 1; j <= numIntervenciones; j++) {
-                    row += `<td>
-                                <input type="range" min="0" max="5" step="0.5" value="0" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
-                                <span class="value">0.0</span>
-                            </td>`;
+                let row;
+                if (recuperado && i <= datos.length) {
+                    const data = datos[i - 1];
+                    row = `<tr>
+                        <td><select>`;
+                    participantes.forEach(participante => {
+                        const selected = data.nombre === participante ? 'selected' : '';
+                        row += `<option value="${participante}" ${selected}>${participante}</option>`;
+                    });
+                    row += `</select></td>`;
+                    data.puntuaciones.forEach(puntuacion => {
+                        row += `<td>
+                            <input type="range" min="0" max="5" step="0.5" value="${puntuacion}" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
+                            <span class="value">${puntuacion}</span>
+                        </td>`;
+                    });
+                    row += `<td class="total">${data.total}</td></tr>`;
+                } else {
+                    row = '<tr><td><select>';
+                    participantes.forEach(participante => {
+                        row += `<option value="${participante}">${participante}</option>`;
+                    });
+                    row += '</select></td>';
+                    for (let j = 1; j <= numIntervenciones; j++) {
+                        row += `<td>
+                            <input type="range" min="0" max="5" step="0.5" value="0" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
+                            <span class="value">0.0</span>
+                        </td>`;
+                    }
+                    row += '<td class="total">0.0</td></tr>';
                 }
-                row += '<td class="total">0.0</td></tr>';
                 tabla.innerHTML += row;
             }
             
-            formChanged = true; // Indicar que el formulario ha cambiado
-            document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
-
-            guardarTablaEnLocalStorage();
+            formChanged = false;
+            document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
         }
 
         function mostrarValor(input) {
@@ -171,7 +217,6 @@
             valueSpan.innerText = parseFloat(input.value).toFixed(1);
             formChanged = true; // Indicar que el formulario ha cambiado
             document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
-            guardarTablaEnLocalStorage();
         }
 
         function calcularTotal(input) {
@@ -184,31 +229,18 @@
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
             formChanged = true; // Indicar que el formulario ha cambiado
             document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
-            guardarTablaEnLocalStorage();
         }
 
         async function finalizar() {
-            const tabla = document.getElementById('tablaPuntuacion');
-            const filas = tabla.querySelectorAll('tr');
-            const resultados = [];
-            
-            filas.forEach((fila, index) => {
-                if (index === 0) return; // Saltar la fila de encabezado
-                const nombre = fila.querySelector('select').value;
-                const puntuaciones = [];
-                fila.querySelectorAll('input[type="range"]').forEach(input => {
-                    puntuaciones.push(parseFloat(input.value) || 0);
-                });
-                const total = parseFloat(fila.querySelector('.total').innerText);
-                resultados.push({ nombre, puntuaciones, total });
-            });
+            guardarDatos(); // Guardar los datos antes de finalizar
 
             const nombreJurado = prompt("Introduce tu nombre de jurado:");
             if (!nombreJurado) {
                 alert('El nombre de jurado es obligatorio.');
                 return;
             }
-            const txtContent = resultados.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
+            const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
+            const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
@@ -229,67 +261,16 @@
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
-                    formChanged = false; // Restablecer la bandera después de guardar
-                    document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
             } catch (error) {
-                console.log('Error en la solicitud: ', error);
-                alert('Hubo un error al enviar los resultados.');
+                console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
 
-        function guardarTablaEnLocalStorage() {
-            const tabla = document.getElementById('tablaPuntuacion');
-            const filas = tabla.querySelectorAll('tr');
-            const tablaData = [];
-
-            filas.forEach((fila, index) => {
-                if (index === 0) return; // Saltar la fila de encabezado
-                const cells = fila.querySelectorAll('td');
-                const rowData = {
-                    nombre: cells[0].querySelector('select').value,
-                    puntuaciones: [],
-                    total: parseFloat(cells[cells.length - 1].innerText)
-                };
-                cells.forEach((cell, cellIndex) => {
-                    if (cellIndex > 0 && cellIndex < cells.length - 1) {
-                        rowData.puntuaciones.push(parseFloat(cell.querySelector('input[type="range"]').value));
-                    }
-                });
-                tablaData.push(rowData);
-            });
-
-            localStorage.setItem('tablaData', JSON.stringify(tablaData));
-        }
-
-        function cargarTablaDesdeLocalStorage() {
-            const tablaData = JSON.parse(localStorage.getItem('tablaData'));
-            if (!tablaData) return;
-
-            document.getElementById('numFreestylers').value = tablaData.length;
-            document.getElementById('numIntervenciones').value = tablaData[0].puntuaciones.length;
-
-            crearTabla();
-
-            const tabla = document.getElementById('tablaPuntuacion');
-            tablaData.forEach((rowData, rowIndex) => {
-                const row = tabla.rows[rowIndex + 1];
-                const select = row.querySelector('select');
-                select.value = rowData.nombre;
-
-                rowData.puntuaciones.forEach((puntuacion, index) => {
-                    const input = row.querySelectorAll('input[type="range"]')[index];
-                    input.value = puntuacion;
-                    mostrarValor(input);
-                });
-
-                calcularTotal(row.querySelector('input[type="range"]'));
-            });
-
-            formChanged = false; // Restablecer la bandera de cambios al cargar
-            document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
+        function recuperar() {
+            cargarDatos(); // Cargar datos almacenados
         }
 
         window.addEventListener('beforeunload', function (e) {
@@ -299,6 +280,9 @@
                 return confirmationMessage; // Gecko + Webkit, Safari, Chrome, etc.
             }
         });
+
+        // Cargar datos al iniciar
+        document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
 </html>
