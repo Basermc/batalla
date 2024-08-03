@@ -130,7 +130,7 @@
     </div>
     <script>
         let formChanged = false;
-        let currentPage = parseInt(localStorage.getItem('currentPage') || '1');
+        let currentPage = 1;
         const rowsPerPage = 10;
 
         async function obtenerParticipantes() {
@@ -252,7 +252,6 @@
             if (currentPage < 1) currentPage = 1;
             if (currentPage > totalPages) currentPage = totalPages;
 
-            localStorage.setItem('currentPage', currentPage);
             crearTabla(false, JSON.parse(localStorage.getItem('tablaData') || '[]'));
         }
 
