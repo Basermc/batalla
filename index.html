@@ -24,8 +24,7 @@
         }
         label, button {
             margin-bottom: 10px;
-            display: inline-block;
-            margin-right: 10px; /* Espacio entre botones */
+            display: block;
         }
         label {
             font-size: 18px;
@@ -73,7 +72,6 @@
             width: 100%;
             border-collapse: collapse;
             margin-top: 20px;
-            display: none; /* Ocultar por defecto */
         }
         th, td {
             border: 1px solid #95a5a6; /* Borde gris claro */
@@ -99,13 +97,6 @@
             border-radius: 5px;
             background-color: #34495e;
         }
-        .pagination {
-            margin-top: 20px;
-            display: none; /* Ocultar por defecto */
-        }
-        .pagination button {
-            margin: 0 5px;
-        }
     </style>
 </head>
 <body>
@@ -120,18 +111,12 @@
     <table id="tablaPuntuacion">
         <!-- La tabla se generará aquí -->
     </table>
-    <div class="pagination" id="pagination">
-        <button onclick="changePage(-1)">Anterior</button>
-        <button onclick="changePage(1)">Siguiente</button>
-    </div>
     <button onclick="finalizar()">Finalizar y Guardar</button>
     <div id="warningMessage" class="warning" style="display: none;">
         Recuerda guardar tus cambios antes de abandonar la página.
     </div>
     <script>
         let formChanged = false;
-        let currentPage = 1;
-        const rowsPerPage = 10;
 
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
@@ -177,82 +162,54 @@
             const numIntervenciones = document.getElementById('numIntervenciones').value;
             const tabla = document.getElementById('tablaPuntuacion');
             
-            let filas = [];
+            tabla.innerHTML = ''; // Limpiar la tabla
             
             // Crear la fila de encabezado
             let headerRow = '<tr><th>Freestyler</th>';
             for (let i = 1; i <= numIntervenciones; i++) {
-                headerRow += `<th>Intervención ${i}</th>`;
+                headerRow += <th>Intervención ${i}</th>;
             }
             headerRow += '<th>Total</th></tr>';
-            filas.push(headerRow);
+            tabla.innerHTML += headerRow;
             
             // Crear las filas de freestylers
             for (let i = 1; i <= numFreestylers; i++) {
                 let row;
                 if (recuperado && i <= datos.length) {
                     const data = datos[i - 1];
-                    row = `<tr>
-                        <td><select>`;
+                    row = <tr>
+                        <td><select>;
                     participantes.forEach(participante => {
                         const selected = data.nombre === participante ? 'selected' : '';
-                        row += `<option value="${participante}" ${selected}>${participante}</option>`;
+                        row += <option value="${participante}" ${selected}>${participante}</option>;
                     });
-                    row += `</select></td>`;
+                    row += </select></td>;
                     data.puntuaciones.forEach(puntuacion => {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="${puntuacion}" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">${puntuacion}</span>
-                        </td>`;
+                        </td>;
                     });
-                    row += `<td class="total">${data.total}</td></tr>`;
+                    row += <td class="total">${data.total}</td></tr>;
                 } else {
                     row = '<tr><td><select>';
                     participantes.forEach(participante => {
-                        row += `<option value="${participante}">${participante}</option>`;
+                        row += <option value="${participante}">${participante}</option>;
                     });
                     row += '</select></td>';
                     for (let j = 1; j <= numIntervenciones; j++) {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="0" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">0.0</span>
-                        </td>`;
+                        </td>;
                     }
                     row += '<td class="total">0.0</td></tr>';
                 }
-                filas.push(row);
+                tabla.innerHTML += row;
             }
-
-            // Mostrar filas según la página actual
-            mostrarFilasPorPagina(filas);
-
-            document.getElementById('tablaPuntuacion').style.display = 'table';
-            document.getElementById('pagination').style.display = 'block';
-
+            
             formChanged = false;
             document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
-        }
-
-        function mostrarFilasPorPagina(filas) {
-            const tabla = document.getElementById('tablaPuntuacion');
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-
-            tabla.innerHTML = filas[0]; // Mantener encabezado
-            filas.slice(1).slice(start, end).forEach(fila => {
-                tabla.innerHTML += fila;
-            });
-        }
-
-        function changePage(direction) {
-            const numFreestylers = document.getElementById('numFreestylers').value;
-            const totalPages = Math.ceil(numFreestylers / rowsPerPage);
-
-            currentPage += direction;
-            if (currentPage < 1) currentPage = 1;
-            if (currentPage > totalPages) currentPage = totalPages;
-
-            crearTabla(false, JSON.parse(localStorage.getItem('tablaData') || '[]'));
         }
 
         function mostrarValor(input) {
@@ -283,7 +240,7 @@
                 return;
             }
             const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
-            const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
+            const txtContent = datos.map(r => Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}).join('\n');
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
@@ -294,7 +251,7 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: new URLSearchParams({
-                        filename: `${nombreJurado}.txt`,
+                        filename: ${nombreJurado}.txt,
                         content: txtContent
                     })
                 });
@@ -328,4 +285,4 @@
         document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
-</html>
+</html> 
