@@ -1,6 +1,7 @@
 name: Process Results
 
-on: push
+on:
+  workflow_dispatch:
 
 jobs:
   process-results:
