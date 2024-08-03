@@ -216,14 +216,9 @@
             }
         }
         
-        // Agregar evento beforeunload
-        window.addEventListener('beforeunload', function (e) {
-            if (formChanged) {
-                const confirmationMessage = '¿Estás seguro de que deseas abandonar esta página? Los cambios no guardados se perderán.';
-                (e || window.event).returnValue = confirmationMessage; // Gecko + IE
-                return confirmationMessage; // Gecko + Webkit, Safari, Chrome, etc.
-            }
-        });
+        // Cargar el estado de la tabla al cargar la página
+        window.addEventListener('load', cargarEstado);
+        window.addEventListener('beforeunload', guardarEstado);
     </script>
 </body>
 </html>
