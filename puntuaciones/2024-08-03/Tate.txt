@@ -1,0 +1,2 @@
+Nombre: krisan, Puntuaciones: 3, 5, Total: 8.0
+Nombre: krisan, Puntuaciones: 4.5, 2.5, Total: 7.0
