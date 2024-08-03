@@ -88,6 +88,15 @@
             background-color: #3498db; /* Azul brillante */
             color: #ffffff; /* Texto blanco */
         }
+        .warning {
+            color: #e74c3c;
+            font-size: 18px;
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #e74c3c;
+            border-radius: 5px;
+            background-color: #34495e;
+        }
     </style>
 </head>
 <body>
@@ -102,6 +111,9 @@
         <!-- La tabla se generará aquí -->
     </table>
     <button onclick="finalizar()">Finalizar y Guardar</button>
+    <div id="warningMessage" class="warning" style="display: none;">
+        Recuerda guardar tus cambios antes de abandonar la página.
+    </div>
     <script>
         let formChanged = false;
 
@@ -145,12 +157,14 @@
             }
             
             formChanged = true; // Indicar que el formulario ha cambiado
+            document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
         }
 
         function mostrarValor(input) {
             const valueSpan = input.nextElementSibling;
             valueSpan.innerText = parseFloat(input.value).toFixed(1);
             formChanged = true; // Indicar que el formulario ha cambiado
+            document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
         }
 
         function calcularTotal(input) {
@@ -162,6 +176,7 @@
             });
             row.querySelector('.total').innerText = total.toFixed(1); // Mostrar con un decimal
             formChanged = true; // Indicar que el formulario ha cambiado
+            document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
         }
 
         async function finalizar() {
@@ -206,7 +221,6 @@
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
                     alert('Resultados enviados para guardar en el repositorio.');
-                    formChanged = false; // Indicar que el formulario se ha guardado
                 } else {
                     alert('Hubo un problema al enviar los resultados. Código de estado: ' + response.status);
                 }
@@ -216,10 +230,9 @@
             }
         }
 
-        // Agregar evento beforeunload
         window.addEventListener('beforeunload', function (e) {
             if (formChanged) {
-                const confirmationMessage = '¿Estás seguro de que deseas abandonar esta página? Los cambios no guardados se perderán.';
+                const confirmationMessage = 'Tienes cambios no guardados. ¿Estás seguro de que quieres salir?';
                 (e || window.event).returnValue = confirmationMessage; // Gecko + IE
                 return confirmationMessage; // Gecko + Webkit, Safari, Chrome, etc.
             }
