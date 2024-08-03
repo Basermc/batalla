@@ -270,9 +270,9 @@
                 alert('El nombre de jurado es obligatorio para recuperar el archivo.');
                 return;
             }
-            
-            const fechaHoy = new Date().toISOString().split('T')[0]; // Obtener la fecha en formato YYYY-MM-DD
-            const url = `https://incredible-torrone-545d43.netlify.app/.netlify/functions/get-file?path=puntuaciones/${fechaHoy}/${nombreJurado}.txt`;
+            const now = new Date();
+            const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}`;
+            const url = `https://incredible-torrone-545d43.netlify.app/.netlify/functions/get-file?path=puntuaciones/${formattedDate}//${nombreJurado}.txt`;
 
             try {
                 const response = await fetch(url);
