@@ -260,7 +260,7 @@
             const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
 
             // Mostrar mensaje de advertencia
-            const userChoice = confirm('Recuerda guardar tus cambios antes de abandonar la página. ¿Aceptar para enviar los resultados, Cancelar para cancelar, o Cachear Datos para guardar solo localmente?');
+            const userChoice = confirm('Recuerda guardar tus cambios antes de abandonar la página. ¿Aceptar para enviar los resultados, Cancelar para Cachear Datos para guardar solo localmente?');
 
             if (userChoice === null) {
                 // Cancelar - No hacer nada
