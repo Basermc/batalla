@@ -1,5 +1,8 @@
 name: procesar resultados
-on: push
+on: 
+  push:
+    paths:
+      - 'README.md'  # Solo se ejecuta si se hace un push a este archivo
 jobs:
   procesar-resultados:
     runs-on: ubuntu-latest
