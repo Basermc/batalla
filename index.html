@@ -208,6 +208,13 @@
                 console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
             }
         }
+
+        // Agregar evento beforeunload
+        window.addEventListener('beforeunload', function (e) {
+            // Mostrar el mensaje de advertencia
+            e.preventDefault();
+            e.returnValue = ''; // Mostrar el mensaje de advertencia en algunos navegadores
+        });
     </script>
 </body>
 </html>
