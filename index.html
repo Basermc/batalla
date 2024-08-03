@@ -9,19 +9,19 @@
             font-family: 'Arial', sans-serif;
             margin: 0;
             padding: 0;
-            background-color: #2c3e50;
-            color: #ecf0f1;
+            background-color: #2c3e50; /* Fondo oscuro */
+            color: #ecf0f1; /* Texto claro */
             text-align: center;
-            padding-bottom: 150px;
+            padding-bottom: 150px; /* Espacio para los elementos fijos */
         }
         .container {
             margin: 20px auto;
             width: 90%;
             max-width: 600px;
-            background-color: #34495e;
+            background-color: #34495e; /* Fondo de la caja */
             padding: 20px;
             border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
         }
         label, button {
             margin-bottom: 10px;
@@ -42,21 +42,21 @@
         }
         input[type="range"]::-webkit-slider-thumb {
             -webkit-appearance: none;
-            background: #e74c3c;
+            background: #e74c3c; /* Rojo vivo */
             height: 24px;
             width: 24px;
             border-radius: 50%;
             cursor: pointer;
         }
         input[type="range"]::-moz-range-thumb {
-            background: #e74c3c;
+            background: #e74c3c; /* Rojo vivo */
             height: 24px;
             width: 24px;
             border-radius: 50%;
             cursor: pointer;
         }
         button {
-            background-color: #e74c3c;
+            background-color: #e74c3c; /* Rojo vivo */
             color: #ecf0f1;
             padding: 10px 20px;
             border: none;
@@ -67,7 +67,7 @@
             transition: background-color 0.3s;
         }
         button:hover {
-            background-color: #c0392b;
+            background-color: #c0392b; /* Rojo más oscuro */
         }
         table {
             width: 100%;
@@ -75,19 +75,19 @@
             margin-top: 20px;
         }
         th, td {
-            border: 1px solid #95a5a6;
+            border: 1px solid #95a5a6; /* Borde gris claro */
             padding: 10px;
             text-align: center;
         }
         th {
-            background-color: #2ecc71;
-            color: #ffffff;
+            background-color: #2ecc71; /* Verde brillante */
+            color: #ffffff; /* Texto blanco */
             font-weight: bold;
         }
         .total {
             font-weight: bold;
-            background-color: #3498db;
-            color: #ffffff;
+            background-color: #3498db; /* Azul brillante */
+            color: #ffffff; /* Texto blanco */
         }
         .warning {
             color: #e74c3c;
@@ -103,10 +103,10 @@
             bottom: 0;
             left: 0;
             width: 100%;
-            background-color: #34495e;
+            background-color: #34495e; /* Fondo de la caja */
             padding: 10px;
             border-top: 1px solid #95a5a6;
-            z-index: 100;
+            z-index: 100; /* Asegurarse de que esté sobre otros contenidos */
             text-align: center;
         }
         #fixed-container button {
@@ -122,7 +122,6 @@
         <input type="number" id="numIntervenciones" min="1" value="2">
         <button onclick="crearTabla()">Crear Tabla</button>
         <button onclick="recuperar()">Recuperar Datos</button>
-        <button onclick="actualizarParticipantes()">Actualizar Participantes</button>
     </div>
     <table id="tablaPuntuacion">
         <!-- La tabla se generará aquí -->
@@ -137,14 +136,9 @@
         let formChanged = false;
 
         async function obtenerParticipantes() {
-            try {
-                const response = await fetch('participantes.txt');
-                const text = await response.text();
-                return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
-            } catch (error) {
-                console.error('Error al obtener los participantes:', error);
-                return [];
-            }
+            const response = await fetch('participantes.txt');
+            const text = await response.text();
+            return text.split(',').map(nombre => nombre.trim()).filter(nombre => nombre !== '');
         }
 
         function guardarDatos() {
@@ -190,7 +184,7 @@
             // Crear la fila de encabezado
             let headerRow = '<tr><th>Freestyler</th>';
             for (let i = 1; i <= numIntervenciones; i++) {
-                headerRow += `<th>Intervención ${i}</th>`;
+                headerRow += <th>Intervención ${i}</th>;
             }
             headerRow += '<th>Total</th></tr>';
             tabla.innerHTML += headerRow;
@@ -200,31 +194,31 @@
                 let row;
                 if (recuperado && i <= datos.length) {
                     const data = datos[i - 1];
-                    row = `<tr>
-                        <td><select>`;
+                    row = <tr>
+                        <td><select>;
                     participantes.forEach(participante => {
                         const selected = data.nombre === participante ? 'selected' : '';
-                        row += `<option value="${participante}" ${selected}>${participante}</option>`;
+                        row += <option value="${participante}" ${selected}>${participante}</option>;
                     });
-                    row += `</select></td>`;
+                    row += </select></td>;
                     data.puntuaciones.forEach(puntuacion => {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="${puntuacion}" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">${puntuacion}</span>
-                        </td>`;
+                        </td>;
                     });
-                    row += `<td class="total">${data.total}</td></tr>`;
+                    row += <td class="total">${data.total}</td></tr>;
                 } else {
                     row = '<tr><td><select>';
                     participantes.forEach(participante => {
-                        row += `<option value="${participante}">${participante}</option>`;
+                        row += <option value="${participante}">${participante}</option>;
                     });
                     row += '</select></td>';
                     for (let j = 1; j <= numIntervenciones; j++) {
-                        row += `<td>
+                        row += <td>
                             <input type="range" min="0" max="5" step="0.5" value="0" oninput="mostrarValor(this)" onchange="calcularTotal(this)">
                             <span class="value">0.0</span>
-                        </td>`;
+                        </td>;
                     }
                     row += '<td class="total">0.0</td></tr>';
                 }
@@ -263,7 +257,7 @@
                 return;
             }
             const datos = JSON.parse(localStorage.getItem('tablaData') || '[]');
-            const txtContent = datos.map(r => `Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}`).join('\n');
+            const txtContent = datos.map(r => Nombre: ${r.nombre}, Puntuaciones: ${r.puntuaciones.join(', ')}, Total: ${r.total}).join('\n');
 
             console.log('Enviando resultados: ', txtContent); // Añadir mensaje de depuración
 
@@ -274,11 +268,12 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     },
                     body: new URLSearchParams({
-                        filename: `${nombreJurado}.txt`,
+                        filename: ${nombreJurado}.txt,
                         content: txtContent
                     })
                 });
 
+                // Verificar solo el código de estado
                 if (response.status === 200) {
                     const responseText = await response.text(); // Leer la respuesta del servidor
                     console.log('Respuesta del servidor: ', responseText); // Mensaje de depuración
@@ -295,34 +290,15 @@
             cargarDatos(); // Cargar datos almacenados
         }
 
-        async function actualizarParticipantes() {
-            const participantes = await obtenerParticipantes();
-            if (participantes.length === 0) {
-                console.warn('No se encontraron participantes.');
-                return;
-            }
-
-            // Actualizar los campos de freestylers en la tabla
-            const selects = document.querySelectorAll('table select');
-            selects.forEach(select => {
-                select.innerHTML = ''; // Limpiar opciones actuales
-                participantes.forEach(participante => {
-                    select.innerHTML += `<option value="${participante}">${participante}</option>`;
-                });
-            });
-
-            formChanged = true; // Indicar que el formulario ha cambiado
-            document.getElementById('warningMessage').style.display = 'block'; // Mostrar advertencia
-        }
-
         window.addEventListener('beforeunload', function (e) {
             if (formChanged) {
                 const confirmationMessage = 'Tienes cambios no guardados. ¿Estás seguro de que quieres salir?';
-                (e || window.event).returnValue = confirmationMessage;
-                return confirmationMessage;
+                (e || window.event).returnValue = confirmationMessage; // Gecko + IE
+                return confirmationMessage; // Gecko + Webkit, Safari, Chrome, etc.
             }
         });
 
+        // Cargar datos al iniciar
         document.addEventListener('DOMContentLoaded', cargarDatos);
     </script>
 </body>
