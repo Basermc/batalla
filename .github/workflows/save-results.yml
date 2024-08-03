@@ -1,7 +1,9 @@
 name: Check for Updates
 
 on:
-  workflow_dispatch
+  push:
+    paths:
+      - 'trigger/**'  # Carpeta donde guardarás los archivos de activación
 
 jobs:
   process:
