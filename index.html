@@ -97,31 +97,6 @@
             border-radius: 5px;
             background-color: #34495e;
         }
-        .recover-container {
-            margin: 20px auto;
-            width: 90%;
-            max-width: 600px;
-            background-color: #34495e; /* Fondo de la caja */
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Sombra */
-        }
-        .recover-input {
-            font-size: 16px;
-            padding: 10px;
-            border: 1px solid #95a5a6;
-            border-radius: 4px;
-            margin-bottom: 10px;
-            width: calc(100% - 22px); /* Ajustar para padding y border */
-        }
-        .recover-message {
-            background-color: #2ecc71; /* Verde brillante */
-            color: #ffffff; /* Texto blanco */
-            padding: 10px;
-            border-radius: 4px;
-            display: none; /* Ocultar inicialmente */
-            margin-top: 10px;
-        }
     </style>
 </head>
 <body>
@@ -136,18 +111,9 @@
         <!-- La tabla se generará aquí -->
     </table>
     <button onclick="finalizar()">Finalizar y Guardar</button>
-
-    <div class="recover-container">
-        <label for="nombreJuradoRecuperar">Nombre de Jurado para Recuperar Archivo:</label>
-        <input type="text" id="nombreJuradoRecuperar" class="recover-input">
-        <button onclick="recuperarArchivo()">Recuperar</button>
-        <div id="recuperarMensaje" class="recover-message"></div>
-    </div>
-
     <div id="warningMessage" class="warning" style="display: none;">
         Recuerda guardar tus cambios antes de abandonar la página.
     </div>
-
     <script>
         let formChanged = false;
 
@@ -261,32 +227,6 @@
             } catch (error) {
                 // Eliminado el catch para ignorar otros errores
                 console.log('Error en la solicitud ignorado, el código de estado fue: ', response.status);
-            }
-        }
-
-        async function recuperarArchivo() {
-            const nombreJurado = document.getElementById('nombreJuradoRecuperar').value;
-            if (!nombreJurado) {
-                alert('El nombre de jurado es obligatorio para recuperar el archivo.');
-                return;
-            }
-            const now = new Date();
-            const formattedDate = `${now.getFullYear()}-${('0' + (now.getMonth() + 1)).slice(-2)}-${('0' + now.getDate()).slice(-2)}`;
-            const url = `https://incredible-torrone-545d43.netlify.app/.netlify/functions/get-file?path=puntuaciones/${formattedDate}//${nombreJurado}.txt`;
-
-            try {
-                const response = await fetch(url);
-                if (response.status === 200) {
-                    const text = await response.text();
-                    document.getElementById('recuperarMensaje').innerText = `Contenido del archivo:\n${text}`;
-                    document.getElementById('recuperarMensaje').style.display = 'block';
-                } else {
-                    document.getElementById('recuperarMensaje').innerText = 'No se pudo recuperar el archivo. Código de estado: ' + response.status;
-                    document.getElementById('recuperarMensaje').style.display = 'block';
-                }
-            } catch (error) {
-                document.getElementById('recuperarMensaje').innerText = 'Error al recuperar el archivo.';
-                document.getElementById('recuperarMensaje').style.display = 'block';
             }
         }
 
