@@ -24,7 +24,8 @@
         }
         label, button {
             margin-bottom: 10px;
-            display: block;
+            display: inline-block;
+            margin-right: 10px; /* Espacio entre botones */
         }
         label {
             font-size: 18px;
@@ -97,6 +98,12 @@
             border-radius: 5px;
             background-color: #34495e;
         }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination button {
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
@@ -108,15 +115,21 @@
         <button onclick="crearTabla()">Crear Tabla</button>
         <button onclick="recuperar()">Recuperar Datos</button>
     </div>
-    <table id="tablaPuntuacion">
+    <table id="tablaPuntuacion" style="display: none;">
         <!-- La tabla se generará aquí -->
     </table>
+    <div class="pagination" id="pagination" style="display: none;">
+        <button onclick="changePage(-1)">Anterior</button>
+        <button onclick="changePage(1)">Siguiente</button>
+    </div>
     <button onclick="finalizar()">Finalizar y Guardar</button>
     <div id="warningMessage" class="warning" style="display: none;">
         Recuerda guardar tus cambios antes de abandonar la página.
     </div>
     <script>
         let formChanged = false;
+        let currentPage = 1;
+        const rowsPerPage = 8;
 
         async function obtenerParticipantes() {
             const response = await fetch('participantes.txt');
@@ -173,6 +186,7 @@
             tabla.innerHTML += headerRow;
             
             // Crear las filas de freestylers
+            let filas = [];
             for (let i = 1; i <= numFreestylers; i++) {
                 let row;
                 if (recuperado && i <= datos.length) {
@@ -205,11 +219,39 @@
                     }
                     row += '<td class="total">0.0</td></tr>';
                 }
-                tabla.innerHTML += row;
+                filas.push(row);
             }
-            
+
+            // Mostrar filas según la página actual
+            mostrarFilasPorPagina(filas);
+
+            document.getElementById('tablaPuntuacion').style.display = 'table';
+            document.getElementById('pagination').style.display = 'block';
+
             formChanged = false;
             document.getElementById('warningMessage').style.display = 'none'; // Ocultar advertencia
+        }
+
+        function mostrarFilasPorPagina(filas) {
+            const tabla = document.getElementById('tablaPuntuacion');
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+
+            tabla.innerHTML = tabla.querySelector('tr').outerHTML; // Mantener encabezado
+            filas.slice(start, end).forEach(fila => {
+                tabla.innerHTML += fila;
+            });
+        }
+
+        function changePage(direction) {
+            const numFreestylers = document.getElementById('numFreestylers').value;
+            const totalPages = Math.ceil(numFreestylers / rowsPerPage);
+
+            currentPage += direction;
+            if (currentPage < 1) currentPage = 1;
+            if (currentPage > totalPages) currentPage = totalPages;
+
+            crearTabla(false, JSON.parse(localStorage.getItem('tablaData') || '[]'));
         }
 
         function mostrarValor(input) {
