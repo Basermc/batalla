@@ -1,0 +1,4 @@
+Nombre: Lorena, Puntuaciones: 29.5
+Nombre: Bosko, Puntuaciones: 23.5
+Nombre: Dager, Puntuaciones: 22.5
+Nombre: Krisan, Puntuaciones: 17.0
