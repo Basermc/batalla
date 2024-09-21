@@ -28,6 +28,11 @@ nestea mc,
 marchena,
 kori,
 white,
+kora,
+shoot,
+jackal,
+ronda,
+
 
 
 
