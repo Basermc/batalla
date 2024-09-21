@@ -16,6 +16,8 @@ dager,
 samker,
 equixs,
 klave,
+chito,
+trece,
 
 
 
