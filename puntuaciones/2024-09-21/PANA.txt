@@ -1,0 +1,36 @@
+Nombre: dlt, Puntuaciones: 1.5, 1.5, 3, Total: 6.0
+Nombre: tanquecrack, Puntuaciones: 1, 2, 1.5, Total: 4.5
+Nombre: juan, Puntuaciones: 1.5, 2.5, 2.5, Total: 6.5
+Nombre: brea, Puntuaciones: 0.5, 0, 0.5, Total: 1.0
+Nombre: sejuktc, Puntuaciones: 1, 1, 1, Total: 3.0
+Nombre: azzar, Puntuaciones: 1, 0.5, 1, Total: 2.5
+Nombre: equixs, Puntuaciones: 0.5, 3.5, 1.5, Total: 5.5
+Nombre: mardan, Puntuaciones: 0.5, 1.5, 1, Total: 3.0
+Nombre: klave, Puntuaciones: 1.5, 2.5, 2, Total: 6.0
+Nombre: shoot, Puntuaciones: 1.5, 2.5, 1.5, Total: 5.5
+Nombre: ronda, Puntuaciones: 1, 1.5, 1.5, Total: 4.0
+Nombre: vaskula, Puntuaciones: 0, 0.5, 0.5, Total: 1.0
+Nombre: kora, Puntuaciones: 1.5, 1, 1.5, Total: 4.0
+Nombre: kmiba, Puntuaciones: 1, 2, 1, Total: 4.0
+Nombre: nestea mc, Puntuaciones: 1.5, 0.5, 1.5, Total: 3.5
+Nombre: jackal, Puntuaciones: 2.5, 2.5, 2.5, Total: 7.5
+Nombre: reyzen, Puntuaciones: 1, 1, 0.5, Total: 2.5
+Nombre: fondo, Puntuaciones: 1, 2, 1.5, Total: 4.5
+Nombre: chito, Puntuaciones: 0.5, 0.5, 1, Total: 2.0
+Nombre: pirri, Puntuaciones: 2.5, 1, 2, Total: 5.5
+Nombre: taiel, Puntuaciones: 1, 1.5, 2.5, Total: 5.0
+Nombre: astro, Puntuaciones: 1.5, 1, 2, Total: 4.5
+Nombre: ampare, Puntuaciones: 2, 2.5, 3.5, Total: 8.0
+Nombre: dager, Puntuaciones: 2.5, 1.5, 2.5, Total: 6.5
+Nombre: samker, Puntuaciones: 2, 4, 2, Total: 8.0
+Nombre: garzi, Puntuaciones: 1, 1.5, 2, Total: 4.5
+Nombre: jonny, Puntuaciones: 2.5, 2.5, 3, Total: 8.0
+Nombre: clore y tilo, Puntuaciones: 4, 5, 3, Total: 12.0
+Nombre: pj, Puntuaciones: 2.5, 2.5, 3, Total: 8.0
+Nombre: daltonico, Puntuaciones: 0.5, 0.5, 0.5, Total: 1.5
+Nombre: suki, Puntuaciones: 1.5, 1, 0.5, Total: 3.0
+Nombre: marchena, Puntuaciones: 1, 1, 0, Total: 2.0
+Nombre: trece, Puntuaciones: 2.5, 2, 2, Total: 6.5
+Nombre: kori, Puntuaciones: 3, 1.5, 4.5, Total: 9.0
+Nombre: white, Puntuaciones: 1, 2.5, 1.5, Total: 5.0
+Nombre: xaez, Puntuaciones: 1, 0.5, 1.5, Total: 3.0
