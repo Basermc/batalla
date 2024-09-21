@@ -8,5 +8,10 @@ ampare,
 pj,
 tanquecrack,
 pirri,
+garzi,
+reyzen,
+vaskula,
+daltonico,
+
 
 
