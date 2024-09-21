@@ -19,6 +19,12 @@ klave,
 chito,
 trece,
 xaez,
+suki,
+kmiba,
+azzar,
+brea,
+jonny,
+
 
 
 
